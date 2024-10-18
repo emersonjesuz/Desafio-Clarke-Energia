@@ -28,7 +28,7 @@ jobs:
       - name: Run server tests
         run: |
           cd server
-          npm test
+          npm run test
 
   web-test:
     runs-on: ubuntu-latest
@@ -49,4 +49,4 @@ jobs:
       - name: Run web tests
         run: |
           cd web
-          npm test
+          npm run test
