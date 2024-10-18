@@ -7,7 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id   Int    @id
-  name String
+model Companies {
+  id    String @id @default(uuid())
+  name  String
+  email String
+  phone String
+  cnpj  String
+}
+
+model Suppliers {
+  id         String  @id @default(uuid())
+  name       String
+  logo       String
+  minimumKwh Decimal
+  kwhAmount  Decimal
+  cnpj       String
 }
