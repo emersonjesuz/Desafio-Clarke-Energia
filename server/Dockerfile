@@ -1,20 +1,23 @@
-# Usando uma imagem base do Node.js
-FROM node:18-alpine
+# Use a imagem oficial do Node.js como base
+FROM node:16
 
-# Definindo o diretório de trabalho dentro do container
+# Define o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copiando o package.json e o package-lock.json para o diretório de trabalho
+# Copia os arquivos de package.json e package-lock.json para o diretório de trabalho
 COPY package*.json ./
 
-# Instalando as dependências
+# Instala as dependências da aplicação
 RUN npm install
 
-# Copiando todo o código da aplicação para o diretório de trabalho
+# Copia todos os arquivos da aplicação para o diretório de trabalho
 COPY . .
 
-# Expondo a porta que a aplicação irá rodar
+# Gera o cliente Prisma
+RUN npx prisma generate
+
+# Expõe a porta que a aplicação usará
 EXPOSE 3000
 
-# Comando para rodar a aplicação
+# Comando para iniciar a aplicação
 CMD ["npm", "start"]
