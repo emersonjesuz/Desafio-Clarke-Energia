@@ -3,15 +3,12 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCompanyInput } from '../dtos/inputs/createCompany.inputs';
 
 @Injectable()
 export class CompanyService {
-  private prisma: PrismaService;
-  constructor(prisma: PrismaService) {
-    this.prisma = prisma;
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(company: CreateCompanyInput) {
     try {
