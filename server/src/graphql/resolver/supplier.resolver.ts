@@ -14,4 +14,9 @@ export class SupplierResolver {
     }
     return await this.SupplierService.list(valueKwr);
   }
+
+  @Mutation(() => Supplier)
+  async createSupplier(@Args('supplier') supplier: CreateSupplierInput) {
+    return await this.SupplierService.create(supplier);
+  }
 }

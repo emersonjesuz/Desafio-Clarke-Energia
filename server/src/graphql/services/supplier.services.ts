@@ -9,6 +9,13 @@ export class SupplierService {
     this.prisma = prisma;
   }
 
+  async create(supplier: CreateSupplierInput) {
+    const newSupplier = await this.prisma.suppliers.create({
+      data: supplier,
+    });
+    return newSupplier;
+  }
+
   async list(valueKwr: number) {
     const suppliers = await this.prisma.suppliers.findMany();
     const filteredSuppliersByKwr = suppliers.filter((supplier) => {
