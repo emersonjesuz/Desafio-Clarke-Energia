@@ -1,4 +1,8 @@
-import { INestApplication } from '@nestjs/common';
+import {
+  BadRequestException,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
@@ -8,32 +12,36 @@ import { Company } from '../src/graphql/dtos/models/comapny.model';
 describe('Create Company E2E', () => {
   let app: INestApplication;
   let companyServiceMock: Partial<CompanyService>;
-  const companies: Company[] = [
-    {
-      id: '123',
-      name: 'farmacia do povo',
-      email: 'farmpovo@gmail.com',
-      phone: '5511898333',
-      cnpj: '123',
-    },
-  ];
+  const mockCompany = {
+    id: '123',
+    name: 'farmacia do povo',
+    email: 'farmpovo@gmail.com',
+    phone: '5511898333',
+    cnpj: '10000500201000',
+  };
+  let companies: Company[] = [mockCompany];
 
   beforeEach(async () => {
     companyServiceMock = {
-      create: jest.fn().mockResolvedValue((company: Company) => {
-        if (
-          companies.find(
-            (c) =>
-              c.name === company.name ||
-              c.email === company.email ||
-              c.cnpj === company.cnpj ||
-              c.phone === company.phone,
-          )
-        ) {
-          throw new Error('company already exists');
-        }
+      create: jest.fn().mockImplementation((companyInput) => {
+        const existingcompany = companies.find(
+          (company) =>
+            company.cnpj === companyInput.cnpj ||
+            company.email === companyInput.email ||
+            company.phone === companyInput.phone ||
+            company.name === companyInput.name,
+        );
 
-        return company;
+        if (existingcompany) {
+          throw new BadRequestException('company already exists');
+        }
+        return {
+          id: 'uiid',
+          name: companyInput.name,
+          email: companyInput.email,
+          phone: companyInput.phone,
+          cnpj: companyInput.cnpj,
+        };
       }),
       // Mock para verificar se os dados são únicos
     };
@@ -46,38 +54,39 @@ describe('Create Company E2E', () => {
       .compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   });
 
   afterEach(async () => {
+    companies = [mockCompany];
     await app.close();
   });
 
   it('should create a company', async () => {
+    const mutation = `mutation  {
+      createCompany(company: {
+          name:"Casas Bahia"
+          email:"casasbahia@gmail.com"
+          phone:"5511293847"
+          cnpj:"10000500204001"
+      }){
+          id
+          name
+          email
+          phone
+          cnpj
+      }   
+  }`;
     return request(app.getHttpServer())
       .post('/graphql')
       .send({
         operationName: null,
         variables: {},
-        query: `mutation  {
-                    createCompany(company: {
-                        name:"farmacia do povo1"
-                        email:"farmpovo@gmail.com"
-                        phone:"5511898331"
-                        cnpj:"122232321"
-                    }){
-                        id
-                        name
-                        email
-                        phone
-                        cnpj
-                    }   
-                }`,
+        query: mutation,
         extensions: {},
       })
-      .expect(200)
       .expect((res) => {
-        console.log(res.body);
         expect(res.body.data.createCompany).toEqual({
           id: expect.any(String),
           name: expect.any(String),
@@ -88,20 +97,10 @@ describe('Create Company E2E', () => {
       });
   });
 
-  it('should throw an error if company already exists', async () => {
-    // Fazendo o mock do método create para simular erro
-    // companyServiceMock.create.mockRejectedValueOnce(
-    //   new Error('company already exists'),
-    // );
-
-    return request(app.getHttpServer())
-      .post('/graphql')
-      .send({
-        operationName: null,
-        variables: {},
-        query: `mutation  {
+  it('Should throw an error if the company name is empty', async () => {
+    const mutation = `mutation  {
                     createCompany(company: {
-                        name:"farmacia do povo"
+                        name:""
                         email:"farmpovo@gmail.com"
                         phone:"5511898333"
                         cnpj:"123"
@@ -110,12 +109,261 @@ describe('Create Company E2E', () => {
                         name
                         email
                     }   
-                }`,
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
         extensions: {},
       })
-      .expect(200) // Pode ser 200 dependendo da implementação do GraphQL
       .expect((res) => {
-        console.log(res.body);
+        const message = res.body.errors[0].extensions.originalError.message[0];
+        expect(message).toEqual('Name is required');
+      });
+  });
+
+  it('Should not create a company if the email is invalid', async () => {
+    const mutation = `mutation  {
+                    createCompany(company: {
+                        name:"farmacia do povo"
+                        email:""
+                        phone:"5511898333"
+                        cnpj:"1234567890"
+                    }){
+                        id
+                        name
+                        email
+                    }   
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        const message = res.body.errors[0].extensions.originalError.message[0];
+        expect(message).toEqual('Invalid email address');
+      });
+  });
+
+  it('Should not create a company if the telephone number has more than 11 digits', async () => {
+    const mutation = `mutation  {
+                    createCompany(company: {
+                        name:"farmacia do povo"
+                        email:"f@gmail.com"
+                        phone:"551189833333"
+                        cnpj:"1234567890"
+                    }){
+                        id
+                        name
+                        email
+                    }   
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        const message = res.body.errors[0].extensions.originalError.message[0];
+        expect(message).toEqual(
+          'Phone number must be no longer than 11 digits.',
+        );
+      });
+  });
+
+  it('Should not create a company if the phone number is not just numbers', async () => {
+    const mutation = `mutation  {
+                    createCompany(company: {
+                        name:"farmacia do povo"
+                        email:"f@gmail.com"
+                        phone:"5511C9833a"
+                        cnpj:"1234567890"
+                    }){
+                        id
+                        name
+                        email
+                    }   
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        const message = res.body.errors[0].extensions.originalError.message[0];
+        expect(message).toEqual('The phone number must contain numbers only.');
+      });
+  });
+
+  it('Should not create a company if the telephone number is less than 10 digits', async () => {
+    const mutation = `mutation  {
+                    createCompany(company: {
+                        name:"farmacia do povo"
+                        email:"f@gmail.com"
+                        phone:"55"
+                        cnpj:"1234567890"
+                    }){
+                        id
+                        name
+                        email
+                    }   
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        const message = res.body.errors[0].extensions.originalError.message[0];
+        expect(message).toEqual(
+          'Phone number must be at least 10 digits long.',
+        );
+      });
+  });
+
+  it('Should not create a company if the cnpj is less than 14 digits', async () => {
+    const mutation = `mutation  {
+                    createCompany(company: {
+                        name:"farmacia do povo"
+                        email:"f@gmail.com"
+                        phone:"5511898333"
+                        cnpj:"1234567"
+                    }){
+                        id
+                        name
+                        email
+                    }   
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        const message = res.body.errors[0].extensions.originalError.message[0];
+        expect(message).toEqual('CNPJ must be 14 characters long.');
+      });
+  });
+
+  it('Should generate an error if the companies name already exists', async () => {
+    const mutation = `mutation  {
+      createCompany(company: {
+          name:"farmacia do povo"
+          email:"f@gmail.com"
+          phone:"0111111111"
+          cnpj:"10000500201001"
+      }){
+          id
+          name
+          email
+      }   
+  }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        expect(res.body.errors[0].message).toEqual('company already exists');
+      });
+  });
+
+  it('Should generate an error if the companies email already exists', async () => {
+    const mutation = `mutation  {
+                    createCompany(company: {
+                        name:"farm"
+                        email:"farmpovo@gmail.com"
+                        phone:"0000000000"
+                        cnpj:"10000500201002"
+                    }){
+                        id
+                        name
+                        email
+                    }   
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        expect(res.body.errors[0].message).toEqual('company already exists');
+      });
+  });
+
+  it('Should generate an error if the companies phone already exists', async () => {
+    const mutation = `mutation  {
+                    createCompany(company: {
+                        name:"f"
+                        email:"f@gmail.com"
+                        phone:"5511898333"
+                        cnpj:"10000500201000"
+                    }){
+                        id
+                        name
+                        email
+                        phone
+                    }   
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        expect(res.body.errors[0].message).toEqual('company already exists');
+      });
+  });
+
+  it('Should generate an error if the companies CNPJ already exists', async () => {
+    const mutation = `mutation  {
+                    createCompany(company: {
+                        name:"farm"
+                        email:"far@gmail.com"
+                        phone:"1111111111"
+                        cnpj:"10000500201000"
+                    }){
+                        id
+                        name
+                        email
+                    }   
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
         expect(res.body.errors[0].message).toEqual('company already exists');
       });
   });
