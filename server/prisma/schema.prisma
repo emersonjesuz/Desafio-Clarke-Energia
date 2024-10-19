@@ -9,17 +9,17 @@ datasource db {
 
 model Companies {
   id    String @id @default(uuid())
-  name  String
-  email String
-  phone String
-  cnpj  String
+  name  String @unique
+  email String @unique
+  phone String @unique
+  cnpj  String @unique
 }
 
 model Suppliers {
   id         String  @id @default(uuid())
-  name       String
+  name       String  @unique
   logo       String
   minimumKwh Decimal
   kwhAmount  Decimal
-  cnpj       String
+  cnpj       String  @unique
 }
