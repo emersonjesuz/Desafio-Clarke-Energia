@@ -48,11 +48,11 @@ export class SupplierService {
   async list(valueKwh: number) {
     try {
       const suppliers = await this.prisma.suppliers.findMany();
-      const filteredSuppliersByKwr = suppliers.filter((supplier) => {
+      const filteredSuppliersByKwh = suppliers.filter((supplier) => {
         return +supplier.minimumKwh < valueKwh;
       });
 
-      return filteredSuppliersByKwr;
+      return filteredSuppliersByKwh;
     } catch (error) {
       throw new InternalServerErrorException("Couldn't list suppliers");
     }
