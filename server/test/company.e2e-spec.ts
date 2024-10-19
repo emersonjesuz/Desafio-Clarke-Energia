@@ -33,7 +33,24 @@ describe('Create Company E2E', () => {
         );
 
         if (existingcompany) {
-          throw new BadRequestException('company already exists');
+          switch (true) {
+            case existingcompany.name === companyInput.name:
+              throw new BadRequestException(
+                'the company name is already in use',
+              );
+
+            case existingcompany.email === companyInput.email:
+              throw new BadRequestException(
+                'the company email is already in use',
+              );
+
+            case existingcompany.phone === companyInput.phone:
+              throw new BadRequestException(
+                'the company phone is already in use',
+              );
+            case existingcompany.cnpj === companyInput.cnpj:
+              throw new BadRequestException('company cnpj is already in use');
+          }
         }
         return {
           id: 'uiid',
@@ -285,7 +302,9 @@ describe('Create Company E2E', () => {
         extensions: {},
       })
       .expect((res) => {
-        expect(res.body.errors[0].message).toEqual('company already exists');
+        expect(res.body.errors[0].message).toEqual(
+          'the company name is already in use',
+        );
       });
   });
 
@@ -311,7 +330,9 @@ describe('Create Company E2E', () => {
         extensions: {},
       })
       .expect((res) => {
-        expect(res.body.errors[0].message).toEqual('company already exists');
+        expect(res.body.errors[0].message).toEqual(
+          'the company email is already in use',
+        );
       });
   });
 
@@ -338,7 +359,9 @@ describe('Create Company E2E', () => {
         extensions: {},
       })
       .expect((res) => {
-        expect(res.body.errors[0].message).toEqual('company already exists');
+        expect(res.body.errors[0].message).toEqual(
+          'the company phone is already in use',
+        );
       });
   });
 
@@ -364,7 +387,9 @@ describe('Create Company E2E', () => {
         extensions: {},
       })
       .expect((res) => {
-        expect(res.body.errors[0].message).toEqual('company already exists');
+        expect(res.body.errors[0].message).toEqual(
+          'company cnpj is already in use',
+        );
       });
   });
 });
