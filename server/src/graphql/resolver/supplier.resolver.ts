@@ -8,11 +8,11 @@ import { CreateSupplierInput } from '../dtos/inputs/createSupplier.inputs';
 export class SupplierResolver {
   constructor(private readonly SupplierService: SupplierService) {}
   @Query(() => [Supplier])
-  async listSuppliers(@Args('valueKwr') valueKwr: number) {
-    if (valueKwr <= 0) {
-      throw new BadRequestException('valueKwr must be greater than 0');
+  async listSuppliers(@Args('valueKwh') valueKwh: number) {
+    if (valueKwh <= 0) {
+      throw new BadRequestException('value KWH must be greater than 0');
     }
-    return await this.SupplierService.list(valueKwr);
+    return await this.SupplierService.list(valueKwh);
   }
 
   @Mutation(() => Supplier)

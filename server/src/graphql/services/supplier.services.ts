@@ -16,10 +16,10 @@ export class SupplierService {
     return newSupplier;
   }
 
-  async list(valueKwr: number) {
+  async list(valueKwh: number) {
     const suppliers = await this.prisma.suppliers.findMany();
     const filteredSuppliersByKwr = suppliers.filter((supplier) => {
-      return +supplier.minimumKwh < valueKwr;
+      return +supplier.minimumKwh < valueKwh;
     });
 
     return filteredSuppliersByKwr;
