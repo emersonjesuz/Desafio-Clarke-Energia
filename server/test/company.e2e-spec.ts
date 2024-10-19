@@ -22,6 +22,7 @@ describe('Create Company E2E', () => {
   let companies: Company[] = [mockCompany];
 
   beforeEach(async () => {
+    // Mock para verificar se os dados são únicos
     companyServiceMock = {
       create: jest.fn().mockImplementation((companyInput) => {
         const existingcompany = companies.find(
@@ -60,7 +61,6 @@ describe('Create Company E2E', () => {
           cnpj: companyInput.cnpj,
         };
       }),
-      // Mock para verificar se os dados são únicos
     };
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
