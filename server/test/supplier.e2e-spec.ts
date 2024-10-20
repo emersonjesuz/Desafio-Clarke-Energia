@@ -300,3 +300,116 @@ describe('Create Supplier E2E', () => {
       });
   });
 });
+
+describe('List suppliers E2E', () => {
+  let app: INestApplication;
+  let supplierServiceMock: Partial<SupplierService>;
+  const mockSupplier: Supplier = {
+    id: '123',
+    name: 'Eneel energia',
+    logo: 'https://eneel.com.br/imagens/logo.png',
+    kwhAmount: 1,
+    minimumKwh: 1000,
+    cnpj: '10000500201000',
+  };
+  let suppliers: Supplier[] = [mockSupplier];
+
+  beforeEach(async () => {
+    supplierServiceMock = {
+      list: jest.fn().mockImplementation((valueKwh: number) => {
+        const filteredSuppliersByKwh = suppliers.filter((supplier) => {
+          return +supplier.minimumKwh < valueKwh;
+        });
+
+        return filteredSuppliersByKwh;
+      }),
+    };
+
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    })
+      .overrideProvider(SupplierService)
+      .useValue(supplierServiceMock)
+      .compile();
+
+    app = module.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
+    await app.init();
+  });
+
+  it('Should list suppliers', async () => {
+    const query = `query {
+        listSuppliers(valueKwh:10000) {
+          id
+          name
+          logo
+          kwhAmount
+          minimumKwh
+          cnpj
+        }
+    }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: query,
+        extensions: {},
+      })
+      .expect((res) => {
+        const listSuppliers = res.body.data.listSuppliers as Supplier[];
+        expect(!!listSuppliers.length).toBe(true);
+      });
+  });
+
+  it('Should not list suppliers if the valueKwh is less than 1', async () => {
+    const query = `query {
+        listSuppliers(valueKwh:-1) {
+          id
+          name
+          logo
+          kwhAmount
+          minimumKwh
+          cnpj
+        }
+    }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: query,
+        extensions: {},
+      })
+      .expect((res) => {
+        expect(res.body.errors[0].message).toEqual(
+          'Value KWH must be greater than 0',
+        );
+      });
+  });
+
+  it('Should not list suppliers if the valueKwh is less than the minimumKwh', async () => {
+    const query = `query {
+        listSuppliers(valueKwh:100) {
+          id
+          name
+          logo
+          kwhAmount
+          minimumKwh
+          cnpj
+        }
+    }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: query,
+        extensions: {},
+      })
+      .expect((res) => {
+        const listSuppliers = res.body.data.listSuppliers as Supplier[];
+        expect(!!listSuppliers.length).toBe(false);
+      });
+  });
+});
