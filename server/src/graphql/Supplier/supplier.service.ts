@@ -16,9 +16,9 @@ export class SupplierService {
     if (existingSupplier) {
       switch (true) {
         case existingSupplier.name === supplier.name:
-          throw new BadRequestException('Supplier is already in use');
+          throw new BadRequestException('Supplier name is already in use');
         case existingSupplier.cnpj === supplier.cnpj:
-          throw new BadRequestException('Supplier is already in use');
+          throw new BadRequestException('Supplier cnpj is already in use');
       }
     }
 

@@ -27,6 +27,17 @@ export class SupplierRepository {
     });
   }
 
+  async findById(id: string) {
+    return await this.prisma.suppliers.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        Evaluation: true,
+      },
+    });
+  }
+
   async findMany() {
     return await this.prisma.suppliers.findMany();
   }
