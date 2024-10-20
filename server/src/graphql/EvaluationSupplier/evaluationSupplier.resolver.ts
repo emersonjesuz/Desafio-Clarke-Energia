@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { EvaluationSupplierInput } from './evaluationSupplier.inputs';
 import { EvaluationSupplierService } from './evaluationSupplier.service';
+import { BadRequestException } from '@nestjs/common';
 
 @Resolver()
 export class EvaluationSupplierResolver {
@@ -10,6 +11,9 @@ export class EvaluationSupplierResolver {
 
   @Query(() => Number)
   async calculateAverage(@Args('supplierId') supplierId: string) {
+    if (!supplierId) {
+      throw new BadRequestException('Supplier ID is required');
+    }
     return this.EvaluationSupplierService.calculateAverage(supplierId);
   }
 
