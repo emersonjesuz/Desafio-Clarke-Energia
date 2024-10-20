@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsString,
+  Length,
   Matches,
   MaxLength,
   MinLength,
@@ -15,18 +16,17 @@ export class CreateCompanyInput {
   name: string;
 
   @Field()
-  @IsNotEmpty({ message: 'Email is required' })
-  @IsEmail()
+  @IsEmail({}, { message: 'Invalid email address' })
   email: string;
 
   @Field()
   @IsString()
-  @Matches(/^\d+$/, { message: 'Phone number must contain only digits.' })
+  @Matches(/^\d+$/, { message: 'The phone number must contain numbers only.' })
   @MinLength(10, { message: 'Phone number must be at least 10 digits long.' })
   @MaxLength(11, { message: 'Phone number must be no longer than 11 digits.' })
   phone: string;
 
   @Field()
-  @IsNotEmpty({ message: 'CNPJ is required' })
+  @Length(14, 14, { message: 'CNPJ must be 14 characters long.' })
   cnpj: string;
 }

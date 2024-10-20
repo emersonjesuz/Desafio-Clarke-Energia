@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, Min } from 'class-validator';
+import { IsNotEmpty, Length, Min } from 'class-validator';
 
 @InputType()
 export class CreateSupplierInput {
@@ -11,7 +11,7 @@ export class CreateSupplierInput {
   logo: string;
 
   @Field()
-  @Min(1, { message: 'minimum KWH must be greater than 0' })
+  @Min(1, { message: 'Minimum KWH must be greater than 0' })
   minimumKwh: number;
 
   @Field()
@@ -19,6 +19,6 @@ export class CreateSupplierInput {
   kwhAmount: number;
 
   @Field()
-  @IsNotEmpty({ message: 'CNPJ is required' })
+  @Length(14, 14, { message: 'CNPJ must be 14 characters long.' })
   cnpj: string;
 }

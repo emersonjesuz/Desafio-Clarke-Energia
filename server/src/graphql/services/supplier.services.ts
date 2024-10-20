@@ -3,15 +3,12 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { CreateSupplierInput } from '../dtos/inputs/createSupplier.inputs';
 
 @Injectable()
 export class SupplierService {
-  private prisma: PrismaService;
-  constructor(prisma: PrismaService) {
-    this.prisma = prisma;
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(supplier: CreateSupplierInput) {
     try {
@@ -29,7 +26,12 @@ export class SupplierService {
       });
 
       if (existingSupplier) {
-        throw new BadRequestException('Supplier already exists');
+        switch (true) {
+          case existingSupplier.name === supplier.name:
+            throw new BadRequestException('Supplier is already in use');
+          case existingSupplier.cnpj === supplier.cnpj:
+            throw new BadRequestException('Supplier is already in use');
+        }
       }
 
       const newSupplier = await this.prisma.suppliers.create({
