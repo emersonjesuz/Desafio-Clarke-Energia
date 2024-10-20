@@ -8,10 +8,7 @@ import { CreateSupplierInput } from '../dtos/inputs/createSupplier.inputs';
 
 @Injectable()
 export class SupplierService {
-  private prisma: PrismaService;
-  constructor(prisma: PrismaService) {
-    this.prisma = prisma;
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(supplier: CreateSupplierInput) {
     try {
