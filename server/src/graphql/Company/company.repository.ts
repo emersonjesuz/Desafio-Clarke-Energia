@@ -32,4 +32,15 @@ export class CompanyRepository {
       },
     });
   }
+
+  async findById(id: string) {
+    return await this.prisma.companies.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        Evaluation: true,
+      },
+    });
+  }
 }
