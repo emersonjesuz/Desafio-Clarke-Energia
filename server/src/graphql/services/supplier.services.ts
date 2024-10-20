@@ -29,7 +29,12 @@ export class SupplierService {
       });
 
       if (existingSupplier) {
-        throw new BadRequestException('Supplier already exists');
+        switch (true) {
+          case existingSupplier.name === supplier.name:
+            throw new BadRequestException('Supplier is already in use');
+          case existingSupplier.cnpj === supplier.cnpj:
+            throw new BadRequestException('Supplier is already in use');
+        }
       }
 
       const newSupplier = await this.prisma.suppliers.create({
