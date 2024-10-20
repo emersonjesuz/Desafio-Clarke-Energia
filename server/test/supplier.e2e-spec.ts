@@ -6,42 +6,27 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { Supplier } from '../src/graphql/Supplier/supplier.model';
-import { SupplierService } from '../src/graphql/services/supplier.service';
+import { SupplierRepository } from '../src/graphql/Supplier/supplier.repository';
 import * as request from 'supertest';
 
 describe('Create Supplier E2E', () => {
   let app: INestApplication;
-  let supplierServiceMock: Partial<SupplierService>;
+  let supplierRepositoryMock: Partial<SupplierRepository>;
   const mockSupplier: Supplier = {
     id: '123',
     name: 'Eneel energia',
     logo: 'https://eneel.com.br/imagens/logo.png',
     kwhAmount: 1,
-    minimumKwh: 1,
+    minimumKwh: 1000,
     cnpj: '10000500201000',
   };
   let suppliers: Supplier[] = [mockSupplier];
 
   beforeEach(async () => {
     // Mock para verificar se os dados são únicos
-    supplierServiceMock = {
+    supplierRepositoryMock = {
       create: jest.fn().mockImplementation((newSupplier) => {
-        const existingSupplier = suppliers.find(
-          (supplier) =>
-            supplier.cnpj === newSupplier.cnpj ||
-            supplier.name === newSupplier.name,
-        );
-
-        if (existingSupplier) {
-          switch (true) {
-            case existingSupplier.name === newSupplier.name:
-              throw new BadRequestException('Supplier name is already in use');
-
-            case existingSupplier.cnpj === newSupplier.cnpj:
-              throw new BadRequestException('Supplier cnpj is already in use');
-          }
-        }
-
+        suppliers.push(newSupplier);
         return {
           id: '123',
           name: newSupplier.name,
@@ -51,13 +36,21 @@ describe('Create Supplier E2E', () => {
           cnpj: newSupplier.cnpj,
         };
       }),
+
+      findOne: jest.fn().mockImplementation((supplierInput) => {
+        return suppliers.find(
+          (supplier) =>
+            supplier.name === supplierInput.name ||
+            supplier.cnpj === supplierInput.cnpj,
+        );
+      }),
     };
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(SupplierService)
-      .useValue(supplierServiceMock)
+      .overrideProvider(SupplierRepository)
+      .useValue(supplierRepositoryMock)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -303,7 +296,7 @@ describe('Create Supplier E2E', () => {
 
 describe('List suppliers E2E', () => {
   let app: INestApplication;
-  let supplierServiceMock: Partial<SupplierService>;
+  let supplierRepositoryMock: Partial<SupplierRepository>;
   const mockSupplier: Supplier = {
     id: '123',
     name: 'Eneel energia',
@@ -315,26 +308,27 @@ describe('List suppliers E2E', () => {
   let suppliers: Supplier[] = [mockSupplier];
 
   beforeEach(async () => {
-    supplierServiceMock = {
-      list: jest.fn().mockImplementation((valueKwh: number) => {
-        const filteredSuppliersByKwh = suppliers.filter((supplier) => {
-          return +supplier.minimumKwh < valueKwh;
-        });
-
-        return filteredSuppliersByKwh;
+    supplierRepositoryMock = {
+      findMany: jest.fn().mockImplementation(() => {
+        return suppliers;
       }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(SupplierService)
-      .useValue(supplierServiceMock)
+      .overrideProvider(SupplierRepository)
+      .useValue(supplierRepositoryMock)
       .compile();
 
     app = module.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
+  });
+
+  afterEach(async () => {
+    suppliers = [];
+    await app.close();
   });
 
   it('Should list suppliers', async () => {
