@@ -1,4 +1,3 @@
-import { UserInputError } from '@nestjs/apollo';
 import {
   BadRequestException,
   Injectable,
@@ -55,5 +54,24 @@ export class EvaluationSupplierService {
       },
     });
     return 'Evaluation created successfully';
+  }
+
+  async calculateAverage(supplierId: string): Promise<number> {
+    const evaluations = await this.prisma.evaluation.findMany({
+      where: {
+        supplierId,
+      },
+    });
+
+    if (evaluations.length === 0) {
+      return 0;
+    }
+
+    const sum = evaluations.reduce(
+      (acc, evaluation) => acc + evaluation.note,
+      0,
+    );
+    const average = sum / evaluations.length;
+    return average;
   }
 }

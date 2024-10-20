@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { EvaluationSupplierInput } from '../dtos/inputs/evaluationSupplier.inputs';
 import { EvaluationSupplierService } from '../services/evaluationSupplier.service';
 
@@ -7,6 +7,11 @@ export class EvaluationSupplierResolver {
   constructor(
     private readonly EvaluationSupplierService: EvaluationSupplierService,
   ) {}
+
+  @Query(() => Number)
+  async calculateAverage(@Args('supplierId') supplierId: string) {
+    return this.EvaluationSupplierService.calculateAverage(supplierId);
+  }
 
   @Mutation(() => String)
   addEvaluationSupplier(
