@@ -6,7 +6,7 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import { Supplier } from '../src/graphql/dtos/models/supplier.model';
-import { SupplierService } from '../src/graphql/services/supplier.services';
+import { SupplierService } from '../src/graphql/services/supplier.service';
 import * as request from 'supertest';
 
 describe('Create Supplier E2E', () => {

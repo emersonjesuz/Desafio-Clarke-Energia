@@ -6,7 +6,7 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { CompanyService } from '../src/graphql/services/company.services';
+import { CompanyService } from '../src/graphql/services/company.service';
 import { Company } from '../src/graphql/dtos/models/company.model';
 
 describe('Create Company E2E', () => {
