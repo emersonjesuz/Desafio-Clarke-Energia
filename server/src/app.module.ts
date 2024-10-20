@@ -4,8 +4,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { CompanyResolver } from './graphql/resolver/company.resolver';
 import { PrismaModule } from './prisma/prisma.module';
 import { SupplierResolver } from './graphql/resolver/supplier.resolver';
-import { SupplierService } from './graphql/services/supplier.services';
-import { CompanyService } from './graphql/services/company.services';
+import { SupplierService } from './graphql/services/supplier.service';
+import { CompanyService } from './graphql/services/company.service';
 
 @Module({
   imports: [
