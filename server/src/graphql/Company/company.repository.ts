@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { find } from 'rxjs';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { Company } from './company.model';
+import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCompanyInput } from './createCompany.inputs';
 
 @Injectable()

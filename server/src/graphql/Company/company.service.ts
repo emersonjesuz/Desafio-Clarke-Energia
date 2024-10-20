@@ -8,10 +8,10 @@ import { CompanyRepository } from './company.repository';
 
 @Injectable()
 export class CompanyService {
-  constructor(private readonly respository: CompanyRepository) {}
+  constructor(private readonly Respository: CompanyRepository) {}
 
   async create(company: CreateCompanyInput) {
-    const existingcompany = await this.respository.findOne({
+    const existingcompany = await this.Respository.findOne({
       name: company.name,
       email: company.email,
       phone: company.phone,
@@ -32,7 +32,7 @@ export class CompanyService {
       }
     }
 
-    const newCompany = await this.respository.create(company);
+    const newCompany = await this.Respository.create(company);
 
     if (!newCompany)
       throw new InternalServerErrorException("Couldn't create company");

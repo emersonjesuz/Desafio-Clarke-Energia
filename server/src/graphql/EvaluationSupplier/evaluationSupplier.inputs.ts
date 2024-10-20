@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, Max, Min, min } from 'class-validator';
+import { IsNotEmpty, Max, Min } from 'class-validator';
 
 @InputType()
 export class EvaluationSupplierInput {
