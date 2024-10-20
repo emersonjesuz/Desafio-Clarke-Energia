@@ -1,5 +1,9 @@
 import { UserInputError } from '@nestjs/apollo';
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { EvaluationSupplierInput } from '../dtos/inputs/evaluationSupplier.inputs';
 
@@ -7,7 +11,7 @@ import { EvaluationSupplierInput } from '../dtos/inputs/evaluationSupplier.input
 export class EvaluationSupplierService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async evaluate(evaluationInput: EvaluationSupplierInput) {
+  async evaluate(evaluationInput: EvaluationSupplierInput): Promise<string> {
     const supplier = await this.prisma.suppliers.findUnique({
       where: {
         id: evaluationInput.supplierId,
@@ -22,7 +26,7 @@ export class EvaluationSupplierService {
     });
 
     if (!supplier) {
-      throw new UserInputError('Supplier not found');
+      throw new NotFoundException('Supplier not found');
     }
 
     const company = await this.prisma.companies.findUnique({
@@ -32,15 +36,15 @@ export class EvaluationSupplierService {
     });
 
     if (!company) {
-      throw new UserInputError('Company not found');
+      throw new NotFoundException('Company not found');
     }
 
-    const existeEvaluation = supplier.Evaluation.includes({
-      companyId: evaluationInput.companyId,
+    const existeEvaluation = supplier.Evaluation.findIndex((evaluation) => {
+      return evaluation.companyId === evaluationInput.companyId;
     });
 
-    if (existeEvaluation) {
-      throw new UserInputError('Evaluation already exists');
+    if (existeEvaluation !== -1) {
+      throw new BadRequestException('Evaluation already exists');
     }
 
     await this.prisma.evaluation.create({
@@ -50,5 +54,6 @@ export class EvaluationSupplierService {
         companyId: evaluationInput.companyId,
       },
     });
+    return 'Evaluation created successfully';
   }
 }

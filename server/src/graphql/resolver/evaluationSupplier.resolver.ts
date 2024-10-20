@@ -12,7 +12,6 @@ export class EvaluationSupplierResolver {
   addEvaluationSupplier(
     @Args('evaluation') evaluation: EvaluationSupplierInput,
   ) {
-    this.EvaluationSupplierService.evaluate(evaluation);
-    return 'Evaluate with success';
+    return this.EvaluationSupplierService.evaluate(evaluation);
   }
 }
