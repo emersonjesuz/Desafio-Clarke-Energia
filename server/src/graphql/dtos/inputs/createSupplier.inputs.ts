@@ -11,7 +11,7 @@ export class CreateSupplierInput {
   logo: string;
 
   @Field()
-  @Min(1, { message: 'minimum KWH must be greater than 0' })
+  @Min(1, { message: 'Minimum KWH must be greater than 0' })
   minimumKwh: number;
 
   @Field()
