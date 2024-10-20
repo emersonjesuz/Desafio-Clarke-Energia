@@ -1,8 +1,8 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Supplier } from '../dtos/models/supplier.model';
-import { SupplierService } from '../services/supplier.service';
+import { Supplier } from './supplier.model';
+import { SupplierService } from './supplier.service';
 import { BadRequestException } from '@nestjs/common';
-import { CreateSupplierInput } from '../dtos/inputs/createSupplier.inputs';
+import { CreateSupplierInput } from './createSupplier.inputs';
 
 @Resolver()
 export class SupplierResolver {

@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, Max, Min, min } from 'class-validator';
+import { IsNotEmpty, Max, Min } from 'class-validator';
 
 @InputType()
 export class EvaluationSupplierInput {
@@ -12,7 +12,7 @@ export class EvaluationSupplierInput {
   companyId: string;
 
   @Field()
-  @Min(0, { message: 'The grade cannot be less than 0' })
+  @Min(1, { message: 'Note must be greater than or equal to 1' })
   @Max(5, { message: 'The grade cannot be greater than 5' })
   note: number;
 }

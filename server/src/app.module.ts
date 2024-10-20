@@ -1,13 +1,10 @@
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { CompanyResolver } from './graphql/resolver/company.resolver';
+import { SupplierModule } from './graphql/Supplier/supplier.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { SupplierResolver } from './graphql/resolver/supplier.resolver';
-import { SupplierService } from './graphql/services/supplier.service';
-import { CompanyService } from './graphql/services/company.service';
-import { EvaluationSupplierResolver } from './graphql/resolver/evaluationSupplier.resolver';
-import { EvaluationSupplierService } from './graphql/services/evaluationSupplier.service';
+import { EvaluationSupplierModule } from './graphql/EvaluationSupplier/evaluationSupplier.module';
+import { CompanyModule } from './graphql/Company/company.module';
 
 @Module({
   imports: [
@@ -16,15 +13,11 @@ import { EvaluationSupplierService } from './graphql/services/evaluationSupplier
       autoSchemaFile: true,
     }),
     PrismaModule,
+    SupplierModule,
+    EvaluationSupplierModule,
+    CompanyModule,
   ],
-  providers: [
-    CompanyResolver,
-    CompanyService,
-    SupplierResolver,
-    SupplierService,
-    EvaluationSupplierResolver,
-    EvaluationSupplierService,
-  ],
+  providers: [],
   exports: [],
 })
 export class AppModule {}

@@ -1,17 +1,13 @@
-import {
-  BadRequestException,
-  INestApplication,
-  ValidationPipe,
-} from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { CompanyService } from '../src/graphql/services/company.service';
-import { Company } from '../src/graphql/dtos/models/company.model';
+import { Company } from '../src/graphql/Company/company.model';
+import { CompanyRepository } from '../src/graphql/Company/company.repository';
 
 describe('Create Company E2E', () => {
   let app: INestApplication;
-  let companyServiceMock: Partial<CompanyService>;
+  let companyRepositoryMock: Partial<CompanyRepository>;
   const mockCompany = {
     id: '123',
     name: 'farmacia do povo',
@@ -23,36 +19,9 @@ describe('Create Company E2E', () => {
 
   beforeEach(async () => {
     // Mock para verificar se os dados são únicos
-    companyServiceMock = {
+    companyRepositoryMock = {
       create: jest.fn().mockImplementation((companyInput) => {
-        const existingcompany = companies.find(
-          (company) =>
-            company.cnpj === companyInput.cnpj ||
-            company.email === companyInput.email ||
-            company.phone === companyInput.phone ||
-            company.name === companyInput.name,
-        );
-
-        if (existingcompany) {
-          switch (true) {
-            case existingcompany.name === companyInput.name:
-              throw new BadRequestException(
-                'the company name is already in use',
-              );
-
-            case existingcompany.email === companyInput.email:
-              throw new BadRequestException(
-                'the company email is already in use',
-              );
-
-            case existingcompany.phone === companyInput.phone:
-              throw new BadRequestException(
-                'the company phone is already in use',
-              );
-            case existingcompany.cnpj === companyInput.cnpj:
-              throw new BadRequestException('company cnpj is already in use');
-          }
-        }
+        companies.push(companyInput);
         return {
           id: 'uiid',
           name: companyInput.name,
@@ -61,13 +30,24 @@ describe('Create Company E2E', () => {
           cnpj: companyInput.cnpj,
         };
       }),
+      findOne: jest
+        .fn()
+        .mockImplementation((company) =>
+          companies.find(
+            (c) =>
+              c.name === company.name ||
+              c.cnpj === company.cnpj ||
+              c.email === company.email ||
+              c.phone === company.phone,
+          ),
+        ),
     };
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(CompanyService) // Sobrescreve o serviço real pelo mock
-      .useValue(companyServiceMock)
+      .overrideProvider(CompanyRepository) // Sobrescreve o serviço real pelo mock
+      .useValue(companyRepositoryMock)
       .compile();
 
     app = moduleFixture.createNestApplication();
