@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
-import { Supplier } from '../src/graphql/dtos/models/supplier.model';
+import { Supplier } from '../src/graphql/Supplier/supplier.model';
 import { SupplierService } from '../src/graphql/services/supplier.service';
 import * as request from 'supertest';
 
