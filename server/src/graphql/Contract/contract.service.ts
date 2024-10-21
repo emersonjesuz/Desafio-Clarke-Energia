@@ -48,6 +48,10 @@ export class ContractService {
   }
 
   async countContractsBySupplier(supplierId: string) {
+    const supplier = await this.supplierRepository.findById(supplierId);
+    if (!supplier) {
+      throw new BadRequestException('Supplier not found');
+    }
     return this.repository.countBySupplier(supplierId);
   }
 }
