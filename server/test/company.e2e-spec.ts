@@ -19,7 +19,6 @@ describe('Create Company E2E', () => {
   let companies: Company[] = [mockCompany];
 
   beforeEach(async () => {
-    // Mock para verificar se os dados são únicos
     companyRepositoryMock = {
       create: jest.fn().mockImplementation((companyInput) => {
         companies.push(companyInput);
