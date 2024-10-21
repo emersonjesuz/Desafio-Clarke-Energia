@@ -5,6 +5,7 @@ import { SupplierModule } from './graphql/Supplier/supplier.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { EvaluationSupplierModule } from './graphql/EvaluationSupplier/evaluationSupplier.module';
 import { CompanyModule } from './graphql/Company/company.module';
+import { ContractModule } from './graphql/Contract/contract.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CompanyModule } from './graphql/Company/company.module';
     SupplierModule,
     EvaluationSupplierModule,
     CompanyModule,
+    ContractModule,
   ],
   providers: [],
   exports: [],

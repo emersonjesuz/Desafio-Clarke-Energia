@@ -41,4 +41,22 @@ export class SupplierRepository {
   async findMany() {
     return await this.prisma.suppliers.findMany();
   }
+
+  async createContract(supplierId: string, companyId: string) {
+    return await this.prisma.contracts.create({
+      data: {
+        supplierId,
+        companyId,
+      },
+    });
+  }
+
+  findOneContract(supplierId: string, companyId: string) {
+    return this.prisma.contracts.findFirst({
+      where: {
+        supplierId,
+        companyId,
+      },
+    });
+  }
 }

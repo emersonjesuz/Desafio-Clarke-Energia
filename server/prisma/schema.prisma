@@ -14,6 +14,7 @@ model Companies {
   phone      String       @unique
   cnpj       String       @unique
   Evaluation Evaluation[]
+  Contracts  Contracts[]
 }
 
 model Suppliers {
@@ -24,11 +25,20 @@ model Suppliers {
   kwhAmount  Decimal
   cnpj       String       @unique
   Evaluation Evaluation[]
+  Contracts  Contracts[]
 }
 
 model Evaluation {
   id         Int       @id @default(autoincrement())
   note       Int
+  supplierId String
+  supplier   Suppliers @relation(fields: [supplierId], references: [id])
+  companyId  String
+  companies  Companies @relation(fields: [companyId], references: [id])
+}
+
+model Contracts {
+  id         Int       @id @default(autoincrement())
   supplierId String
   supplier   Suppliers @relation(fields: [supplierId], references: [id])
   companyId  String
