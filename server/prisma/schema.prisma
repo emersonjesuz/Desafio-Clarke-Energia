@@ -13,7 +13,7 @@ model Companies {
   email      String       @unique
   phone      String       @unique
   cnpj       String       @unique
-  kwr        Decimal      @default(0)
+  kwh        Decimal      @default(0)
   Evaluation Evaluation[]
   Contracts  Contracts[]
 }
