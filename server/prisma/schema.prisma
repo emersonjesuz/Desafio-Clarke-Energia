@@ -13,6 +13,7 @@ model Companies {
   email      String       @unique
   phone      String       @unique
   cnpj       String       @unique
+  kwr        Decimal      @default(0)
   Evaluation Evaluation[]
   Contracts  Contracts[]
 }
@@ -32,15 +33,15 @@ model Evaluation {
   id         Int       @id @default(autoincrement())
   note       Int
   supplierId String
-  supplier   Suppliers @relation(fields: [supplierId], references: [id])
+  supplier   Suppliers @relation(fields: [supplierId], references: [id], onDelete: Cascade)
   companyId  String
-  companies  Companies @relation(fields: [companyId], references: [id])
+  companies  Companies @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
 
 model Contracts {
   id         Int       @id @default(autoincrement())
   supplierId String
-  supplier   Suppliers @relation(fields: [supplierId], references: [id])
+  supplier   Suppliers @relation(fields: [supplierId], references: [id], onDelete: Cascade)
   companyId  String
-  companies  Companies @relation(fields: [companyId], references: [id])
+  companies  Companies @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
