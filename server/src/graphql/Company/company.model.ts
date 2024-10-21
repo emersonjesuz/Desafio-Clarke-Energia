@@ -16,4 +16,7 @@ export class Company {
 
   @Field()
   cnpj: string;
+
+  @Field()
+  kwh: number;
 }

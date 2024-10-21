@@ -6,6 +6,7 @@ import {
   Length,
   Matches,
   MaxLength,
+  Min,
   MinLength,
 } from 'class-validator';
 
@@ -29,4 +30,8 @@ export class CreateCompanyInput {
   @Field()
   @Length(14, 14, { message: 'CNPJ must be 14 characters long.' })
   cnpj: string;
+
+  @Field()
+  @Min(1, { message: 'Minimum KWH must be greater than 0' })
+  kwh: number;
 }

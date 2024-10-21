@@ -16,6 +16,7 @@ export class CompanyService {
       email: company.email,
       phone: company.phone,
       cnpj: company.cnpj,
+      kwh: company.kwh,
     });
     if (existingcompany) {
       switch (true) {
