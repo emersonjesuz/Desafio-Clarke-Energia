@@ -13,7 +13,7 @@ model Companies {
   email      String       @unique
   phone      String       @unique
   cnpj       String       @unique
-  kwh        Decimal      @default(0)
+  kwh        Decimal
   Evaluation Evaluation[]
   Contracts  Contracts[]
 }
@@ -25,6 +25,7 @@ model Suppliers {
   minimumKwh Decimal
   kwhAmount  Decimal
   cnpj       String       @unique
+  state      String
   Evaluation Evaluation[]
   Contracts  Contracts[]
 }
