@@ -4,7 +4,7 @@ import LogoClarkeGreen from "../icons/logoClarkeGreen";
 export default function Header() {
   return (
     <header className="absolute top-0 z-50 flex h-28 w-screen items-center justify-around border-b border-b-[#e5e7eb] bg-gradient-to-l from-[#2e2e2e] to-[#005931]">
-      <nav className="flex w-[90%] items-center justify-between 2xl:w-[65%]">
+      <nav className="flex w-[90%] max-w-7xl items-center justify-between 2xl:w-[65%]">
         <LogoClarkeGreen className="h-[63px] w-[116px]" />
 
         <div className="hidden items-center lg:flex">
