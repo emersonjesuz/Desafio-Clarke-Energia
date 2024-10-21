@@ -36,6 +36,7 @@ describe('Add evaluate E2E', () => {
       email: 'farmpovo@gmail.com',
       phone: '5511898333',
       cnpj: '10000500201000',
+      kwh: 1000,
     };
   };
   const mockEvaluationSupplier: EvaluationSupplier = {

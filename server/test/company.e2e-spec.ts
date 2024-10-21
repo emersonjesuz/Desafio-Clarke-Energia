@@ -14,6 +14,7 @@ describe('Create Company E2E', () => {
     email: 'farmpovo@gmail.com',
     phone: '5511898333',
     cnpj: '10000500201000',
+    kwh: 1000,
   };
   let companies: Company[] = [mockCompany];
 
@@ -28,6 +29,7 @@ describe('Create Company E2E', () => {
           email: companyInput.email,
           phone: companyInput.phone,
           cnpj: companyInput.cnpj,
+          kwh: companyInput.kwh,
         };
       }),
       findOne: jest
@@ -67,6 +69,7 @@ describe('Create Company E2E', () => {
           email:"casasbahia@gmail.com"
           phone:"5511293847"
           cnpj:"10000500204001"
+          kwh:100
       }){
           id
           name
@@ -101,6 +104,8 @@ describe('Create Company E2E', () => {
                         email:"farmpovo@gmail.com"
                         phone:"5511898333"
                         cnpj:"123"
+                         kwh:100
+
                     }){
                         id
                         name
@@ -128,6 +133,7 @@ describe('Create Company E2E', () => {
                         email:""
                         phone:"5511898333"
                         cnpj:"1234567890"
+                         kwh:100
                     }){
                         id
                         name
@@ -155,6 +161,7 @@ describe('Create Company E2E', () => {
                         email:"f@gmail.com"
                         phone:"551189833333"
                         cnpj:"1234567890"
+                         kwh:100
                     }){
                         id
                         name
@@ -184,6 +191,7 @@ describe('Create Company E2E', () => {
                         email:"f@gmail.com"
                         phone:"5511C9833a"
                         cnpj:"1234567890"
+                         kwh:100
                     }){
                         id
                         name
@@ -211,6 +219,7 @@ describe('Create Company E2E', () => {
                         email:"f@gmail.com"
                         phone:"55"
                         cnpj:"1234567890"
+                         kwh:100
                     }){
                         id
                         name
@@ -240,6 +249,7 @@ describe('Create Company E2E', () => {
                         email:"f@gmail.com"
                         phone:"5511898333"
                         cnpj:"1234567"
+                         kwh:100
                     }){
                         id
                         name
@@ -259,6 +269,35 @@ describe('Create Company E2E', () => {
         expect(message).toEqual('CNPJ must be 14 characters long.');
       });
   });
+  // não deve criar se o kwr for menor 1
+  it('Should not create a company if the kwh is less than 1', async () => {
+    const mutation = `mutation  {
+                    createCompany(company: {
+                        name:"farmacia do povo"
+                        email:"f@gmail.com"
+                        phone:"5511898333"
+                        cnpj:"12345678912345"
+                         kwh:0
+                    }){
+                        id
+                        name
+                        email 
+
+                    }
+                }`;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        const message = res.body.errors[0].extensions.originalError.message[0];
+        expect(message).toEqual('Minimum KWH must be greater than 0');
+      });
+  });
 
   it('Should generate an error if the companies name already exists', async () => {
     const mutation = `mutation  {
@@ -266,7 +305,8 @@ describe('Create Company E2E', () => {
           name:"farmacia do povo"
           email:"f@gmail.com"
           phone:"0111111111"
-          cnpj:"10000500201001"
+          cnpj:"12345678912345"
+           kwh:100
       }){
           id
           name
@@ -295,6 +335,7 @@ describe('Create Company E2E', () => {
                         email:"farmpovo@gmail.com"
                         phone:"0000000000"
                         cnpj:"10000500201002"
+                         kwh:100
                     }){
                         id
                         name
@@ -323,6 +364,7 @@ describe('Create Company E2E', () => {
                         email:"f@gmail.com"
                         phone:"5511898333"
                         cnpj:"10000500201000"
+                         kwh:100
                     }){
                         id
                         name
@@ -352,6 +394,7 @@ describe('Create Company E2E', () => {
                         email:"far@gmail.com"
                         phone:"1111111111"
                         cnpj:"10000500201000"
+                         kwh:100
                     }){
                         id
                         name
