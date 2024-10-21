@@ -21,4 +21,8 @@ export class CreateSupplierInput {
   @Field()
   @Length(14, 14, { message: 'CNPJ must be 14 characters long.' })
   cnpj: string;
+
+  @Field()
+  @Length(2, 2, { message: 'State must be 2 characters long.' })
+  state: string;
 }

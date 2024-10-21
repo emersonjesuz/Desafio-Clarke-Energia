@@ -19,4 +19,7 @@ export class Supplier {
 
   @Field()
   cnpj: string;
+
+  @Field()
+  state: string;
 }

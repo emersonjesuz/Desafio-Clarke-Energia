@@ -19,6 +19,7 @@ describe('Create Supplier E2E', () => {
     kwhAmount: 1,
     minimumKwh: 1000,
     cnpj: '10000500201000',
+    state: 'SP',
   };
   let suppliers: Supplier[] = [mockSupplier];
 
@@ -71,6 +72,7 @@ describe('Create Supplier E2E', () => {
           kwhAmount:1
           minimumKwh:1
           cnpj:"10000500201001"
+          state:"ba"
       }) {
         id
         name
@@ -109,6 +111,7 @@ describe('Create Supplier E2E', () => {
           kwhAmount:1
           minimumKwh:1
           cnpj:"10000500201001"
+          state:"ba"
       }) {
         id
         name
@@ -116,6 +119,7 @@ describe('Create Supplier E2E', () => {
         kwhAmount
         minimumKwh
         cnpj
+      
       }
     }
     `;
@@ -141,6 +145,7 @@ describe('Create Supplier E2E', () => {
           kwhAmount:1
           minimumKwh:0
           cnpj:"10000500201001"
+          state:"ba"
       }) {
         id
         name
@@ -173,6 +178,7 @@ describe('Create Supplier E2E', () => {
           kwhAmount:0
           minimumKwh:1
           cnpj:"10000500201001"
+          state:"ba"
       }) {
         id
         name
@@ -205,6 +211,7 @@ describe('Create Supplier E2E', () => {
           kwhAmount:1
           minimumKwh:1
           cnpj:"1234567"
+          state:"ba"
       }) {
         id
         name
@@ -237,6 +244,7 @@ describe('Create Supplier E2E', () => {
           kwhAmount:1
           minimumKwh:1
           cnpj:"10000500201000"
+          state:"ba"
       }) {
         id
         name
@@ -269,6 +277,7 @@ describe('Create Supplier E2E', () => {
           kwhAmount:1
           minimumKwh:1
           cnpj:"10000500201000"
+          state:"ba"
       }) {
         id
         name
@@ -292,6 +301,40 @@ describe('Create Supplier E2E', () => {
         expect(message).toEqual('Supplier cnpj is already in use');
       });
   });
+
+  it('Should not create a supplier if the state is less than 2 characters', async () => {
+    const mutation = `mutation  {
+      createSupplier(supplier: {
+          name:"Coelba energia"
+          logo:"https://eneel.com.br/imagens/logo.png"
+          kwhAmount:1
+          minimumKwh:1
+          cnpj:"10000500201001"
+          state:""
+      }) {
+        id
+        name
+        logo
+        kwhAmount
+        minimumKwh
+        cnpj
+        state
+      }
+    }
+    `;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        const message = res.body.errors[0].extensions.originalError.message[0];
+        expect(message).toEqual('State must be 2 characters long.');
+      });
+  });
 });
 
 describe('List suppliers E2E', () => {
@@ -304,6 +347,7 @@ describe('List suppliers E2E', () => {
     kwhAmount: 1,
     minimumKwh: 1000,
     cnpj: '10000500201000',
+    state: 'SP',
   };
   let suppliers: Supplier[] = [mockSupplier];
 
