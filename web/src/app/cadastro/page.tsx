@@ -11,6 +11,13 @@ export default function Cadastro() {
             Seja bem-vindo
           </h1>
         </section>
+        <p className="text-center font-poppins text-[14px] text-black lg:text-[16px]">
+          Quer encontrar a melhor solução para o seu negócio? Encontramos os
+          <span className="px-2 text-greenClarke">
+            fornecedores com potencial
+          </span>
+          para o seu negócio!
+        </p>
         <FormCadastro />
       </div>
     </div>

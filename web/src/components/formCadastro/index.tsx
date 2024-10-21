@@ -53,13 +53,15 @@ export default function FormCadastro() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="pl-2 font-poppins text-sm">Nome</FormLabel>
+              <FormLabel className="pl-2 font-poppins text-sm">
+                Qual seu nome?*
+              </FormLabel>
               <FormControl>
                 <Input
                   type="text"
                   required
                   className="h-12 w-full"
-                  placeholder="Nome da empresa*"
+                  placeholder=""
                   {...field}
                 />
               </FormControl>
@@ -72,13 +74,15 @@ export default function FormCadastro() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="pl-2 font-poppins text-sm">Email</FormLabel>
+              <FormLabel className="pl-2 font-poppins text-sm">
+                Qual o seu e-mail de trabalho?*
+              </FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   required
                   className="h-12 w-full"
-                  placeholder="Endereço de e-mail*"
+                  placeholder=""
                   {...field}
                 />
               </FormControl>
@@ -91,13 +95,15 @@ export default function FormCadastro() {
           name="cnpj"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="pl-2 font-poppins text-sm">CNPJ</FormLabel>
+              <FormLabel className="pl-2 font-poppins text-sm">
+                Qual o CNPJ da empresa?*
+              </FormLabel>
               <FormControl>
                 <Input
                   type="text"
                   required
                   className="h-12 w-full"
-                  placeholder="CNPJ apenas numeros*"
+                  placeholder=""
                   onChange={(e) => {
                     field.onChange(extractDigits(e.target.value));
                   }}
@@ -114,14 +120,14 @@ export default function FormCadastro() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="pl-2 font-poppins text-sm">
-                Telefone
+                Qual o seu número de telefone?*
               </FormLabel>
               <FormControl>
                 <Input
                   type="tel"
                   required
                   className="h-12 w-full"
-                  placeholder="Telefone apenas numeros*"
+                  placeholder=""
                   onChange={(e) => {
                     field.onChange(extractDigits(e.target.value));
                   }}
@@ -137,36 +143,19 @@ export default function FormCadastro() {
           name="kwh"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="pl-2 font-poppins text-sm">kWh</FormLabel>
+              <FormLabel className="pl-2 font-poppins text-[16px]">
+                Qual o Valor médio da conta de luz da sua empresa?*
+              </FormLabel>
               <FormControl>
                 <Input
                   type="text"
                   required
                   className="h-12 w-full"
-                  placeholder="Valor em kWh*"
+                  placeholder=""
                   onChange={(e) => {
                     field.onChange(extractDigits(e.target.value));
                   }}
                   value={field.value}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="pl-2 font-poppins text-sm">Senha</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  required
-                  className="h-12 w-full"
-                  placeholder="Senha opcional"
-                  {...field}
                 />
               </FormControl>
               <FormMessage />
