@@ -2,7 +2,9 @@ version: '3.9'
 
 services:
   db:
+    container_name: db
     image: postgres:15
+    restart: always
     environment:
       POSTGRES_DB: ${PG_DATABASE}
       POSTGRES_USER: ${PG_USER}
@@ -10,7 +12,18 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - '5434:5432' # Mapeia a porta 5432 do container para a máquina host
+      - '5434:5432'
 
+  api:
+    container_name: nest_api
+    build: .
+    depends_on:
+      - db
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/home/api
+      - api_node_modules:/home/api/node_modules
 volumes:
   postgres_data:
+  api_node_modules:
