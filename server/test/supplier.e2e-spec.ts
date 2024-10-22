@@ -1,13 +1,9 @@
-import {
-  BadRequestException,
-  INestApplication,
-  ValidationPipe,
-} from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { Supplier } from '../src/graphql/Supplier/supplier.model';
 import { SupplierRepository } from '../src/graphql/Supplier/supplier.repository';
-import * as request from 'supertest';
 
 describe('Create Supplier E2E', () => {
   let app: INestApplication;
@@ -136,7 +132,7 @@ describe('Create Supplier E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Name is required');
+        expect(message).toEqual('Nome é obrigatorio');
       });
   });
 
@@ -169,7 +165,7 @@ describe('Create Supplier E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Minimum KWH must be greater than 0');
+        expect(message).toEqual('Minimo de kWh deve ser 1');
       });
   });
 
@@ -202,7 +198,7 @@ describe('Create Supplier E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('KWH amount must be greater than 0');
+        expect(message).toEqual('Valor de kWh deve ser maior que 0');
       });
   });
 
@@ -235,73 +231,7 @@ describe('Create Supplier E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('CNPJ must be 14 characters long.');
-      });
-  });
-
-  it('Should not create a supplier if the name already exists', async () => {
-    const mutation = `mutation  {
-      createSupplier(supplier: {
-          name:"Eneel energia"
-          logo:"https://eneel.com.br/imagens/logo.png"
-          kwhAmount:1
-          minimumKwh:1
-          cnpj:"10000500201000"
-          state:"ba"
-      }) {
-        id
-        name
-        logo
-        kwhAmount
-        minimumKwh
-        cnpj
-      }
-    }
-    `;
-    return request(app.getHttpServer())
-      .post('/graphql')
-      .send({
-        operationName: null,
-        variables: {},
-        query: mutation,
-        extensions: {},
-      })
-      .expect((res) => {
-        const message = res.body.errors[0].message;
-        expect(message).toEqual('Supplier name is already in use');
-      });
-  });
-
-  it('Should not create a supplier if the cnpj already exists', async () => {
-    const mutation = `mutation  {
-      createSupplier(supplier: {
-          name:"Coelba energia"
-          logo:"https://eneel.com.br/imagens/logo.png"
-          kwhAmount:1
-          minimumKwh:1
-          cnpj:"10000500201000"
-          state:"ba"
-      }) {
-        id
-        name
-        logo
-        kwhAmount
-        minimumKwh
-        cnpj
-      }
-    }
-    `;
-    return request(app.getHttpServer())
-      .post('/graphql')
-      .send({
-        operationName: null,
-        variables: {},
-        query: mutation,
-        extensions: {},
-      })
-      .expect((res) => {
-        const message = res.body.errors[0].message;
-        expect(message).toEqual('Supplier cnpj is already in use');
+        expect(message).toEqual('CNPJ deve ter 14 caracteres.');
       });
   });
 
@@ -335,7 +265,73 @@ describe('Create Supplier E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('State must be 2 characters long.');
+        expect(message).toEqual('UF deve ter 2 caracteres.');
+      });
+  });
+
+  it('Should not create a supplier if the name already exists', async () => {
+    const mutation = `mutation  {
+      createSupplier(supplier: {
+          name:"Eneel energia"
+          logo:"https://eneel.com.br/imagens/logo.png"
+          kwhAmount:1
+          minimumKwh:1
+          cnpj:"10000500201000"
+          state:"ba"
+      }) {
+        id
+        name
+        logo
+        kwhAmount
+        minimumKwh
+        cnpj
+      }
+    }
+    `;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        const message = res.body.errors[0].message;
+        expect(message).toEqual('Nome do fornecedor ja esta em uso');
+      });
+  });
+
+  it('Should not create a supplier if the cnpj already exists', async () => {
+    const mutation = `mutation  {
+      createSupplier(supplier: {
+          name:"Coelba energia"
+          logo:"https://eneel.com.br/imagens/logo.png"
+          kwhAmount:1
+          minimumKwh:1
+          cnpj:"10000500201000"
+          state:"ba"
+      }) {
+        id
+        name
+        logo
+        kwhAmount
+        minimumKwh
+        cnpj
+      }
+    }
+    `;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        operationName: null,
+        variables: {},
+        query: mutation,
+        extensions: {},
+      })
+      .expect((res) => {
+        const message = res.body.errors[0].message;
+        expect(message).toEqual('CNPJ do fornecedor ja esta em uso');
       });
   });
 });
@@ -427,7 +423,7 @@ describe('List suppliers E2E', () => {
       })
       .expect((res) => {
         expect(res.body.errors[0].message).toEqual(
-          'Value KWH must be greater than 0',
+          'Valor Kwh deve ser maior que zero',
         );
       });
   });

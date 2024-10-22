@@ -120,7 +120,7 @@ describe('Add evaluate E2E', () => {
       })
       .expect((res) => {
         expect(res.body.data.addEvaluationSupplier).toEqual(
-          'Evaluation created successfully',
+          'Avaliação criada com sucesso',
         );
       });
   });
@@ -145,7 +145,7 @@ describe('Add evaluate E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Supplier ID is required');
+        expect(message).toEqual('ID do fornecedor obrigatório');
       });
   });
 
@@ -169,7 +169,7 @@ describe('Add evaluate E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Company ID is required');
+        expect(message).toEqual('ID da empresa obrigatorio');
       });
   });
 
@@ -193,7 +193,7 @@ describe('Add evaluate E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Note must be greater than or equal to 1');
+        expect(message).toEqual('Nota Não pode ser menor que 1');
       });
   });
 
@@ -217,7 +217,7 @@ describe('Add evaluate E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('The grade cannot be greater than 5');
+        expect(message).toEqual('Nota não pode ser maior que 5');
       });
   });
 
@@ -241,7 +241,7 @@ describe('Add evaluate E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].message;
-        expect(message).toEqual('Supplier not found');
+        expect(message).toEqual('Fornecedor não encontrado');
       });
   });
 
@@ -265,7 +265,7 @@ describe('Add evaluate E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].message;
-        expect(message).toEqual('Company not found');
+        expect(message).toEqual('Empresa não encontrada');
       });
   });
 
@@ -289,7 +289,7 @@ describe('Add evaluate E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].message;
-        expect(message).toEqual('Evaluation already exists');
+        expect(message).toEqual('Avaliação ja existe');
       });
   });
 });
@@ -378,7 +378,7 @@ describe('Media evaluation E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].message;
-        expect(message).toEqual('Supplier ID is required');
+        expect(message).toEqual('ID do fornecedor é obrigatório');
       });
   });
 
@@ -397,7 +397,7 @@ describe('Media evaluation E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].message;
-        expect(message).toEqual('Supplier not found');
+        expect(message).toEqual('Fornecedor não encontrado');
       });
   });
 });

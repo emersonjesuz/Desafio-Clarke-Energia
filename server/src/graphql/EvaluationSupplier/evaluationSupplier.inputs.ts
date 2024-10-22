@@ -4,15 +4,15 @@ import { IsNotEmpty, Max, Min } from 'class-validator';
 @InputType()
 export class EvaluationSupplierInput {
   @Field()
-  @IsNotEmpty({ message: 'Supplier ID is required' })
+  @IsNotEmpty({ message: 'ID do fornecedor obrigatório' })
   supplierId: string;
 
   @Field()
-  @IsNotEmpty({ message: 'Company ID is required' })
+  @IsNotEmpty({ message: 'ID da empresa obrigatorio' })
   companyId: string;
 
   @Field()
-  @Min(1, { message: 'Note must be greater than or equal to 1' })
-  @Max(5, { message: 'The grade cannot be greater than 5' })
+  @Min(1, { message: 'Nota Não pode ser menor que 1' })
+  @Max(5, { message: 'Nota não pode ser maior que 5' })
   note: number;
 }

@@ -17,15 +17,18 @@ export class SupplierService {
     if (existingSupplier) {
       switch (true) {
         case existingSupplier.name === supplier.name:
-          throw new BadRequestException('Supplier name is already in use');
+          throw new BadRequestException('Nome do fornecedor ja esta em uso');
         case existingSupplier.cnpj === supplier.cnpj:
-          throw new BadRequestException('Supplier cnpj is already in use');
+          throw new BadRequestException('CNPJ do fornecedor ja esta em uso');
+          1;
       }
     }
 
     const newSupplier = await this.repository.create(supplier);
     if (!newSupplier)
-      throw new InternalServerErrorException("Couldn't create supplier");
+      throw new InternalServerErrorException(
+        'Nao foi possivel criar o fornecedor',
+      );
     return newSupplier;
   }
 
@@ -35,6 +38,7 @@ export class SupplierService {
     suppliers.forEach((supplier) => {
       if (+supplier.minimumKwh < valueKwh) {
         let avarage = 0;
+
         if (supplier.Evaluations.length) {
           avarage = handleAvarage(supplier.Evaluations);
         }

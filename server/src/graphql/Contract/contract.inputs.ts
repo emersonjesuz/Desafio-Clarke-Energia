@@ -4,10 +4,10 @@ import { IsNotEmpty } from 'class-validator';
 @InputType()
 export class ContractInput {
   @Field()
-  @IsNotEmpty({ message: 'Supplier ID is required' })
+  @IsNotEmpty({ message: 'ID do fornecedor obrigatório' })
   supplierId: string;
 
   @Field()
-  @IsNotEmpty({ message: 'Company ID is required' })
+  @IsNotEmpty({ message: 'ID da empresa obrigatorio' })
   companyId: string;
 }

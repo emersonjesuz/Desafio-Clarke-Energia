@@ -121,7 +121,7 @@ describe('Create Contract E2E', () => {
       })
       .expect((res) => {
         expect(res.body.data.createContract).toEqual(
-          'Contract created successfully',
+          'Contrato criado com sucesso',
         );
       });
   });
@@ -145,7 +145,7 @@ describe('Create Contract E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Supplier ID is required');
+        expect(message).toEqual('ID do fornecedor obrigatório');
       });
   });
 
@@ -168,7 +168,7 @@ describe('Create Contract E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Company ID is required');
+        expect(message).toEqual('ID da empresa obrigatorio');
       });
   });
 
@@ -191,7 +191,7 @@ describe('Create Contract E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].message;
-        expect(message).toEqual('Supplier not found');
+        expect(message).toEqual('Fornecedor não encontrado');
       });
   });
 
@@ -214,7 +214,7 @@ describe('Create Contract E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].message;
-        expect(message).toEqual('Company not found');
+        expect(message).toEqual('Empresa não encontrada');
       });
   });
 
@@ -237,7 +237,7 @@ describe('Create Contract E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].message;
-        expect(message).toEqual('Contract already exists');
+        expect(message).toEqual('Contrato ja existe');
       });
   });
 });
@@ -337,7 +337,9 @@ describe('count Contract by Supplier E2E', () => {
         extensions: {},
       })
       .expect((res) => {
-        expect(res.body.errors[0].message).toEqual('Supplier ID is required');
+        expect(res.body.errors[0].message).toEqual(
+          'ID do fornecedor é obrigatório',
+        );
       });
   });
 
@@ -356,7 +358,7 @@ describe('count Contract by Supplier E2E', () => {
         extensions: {},
       })
       .expect((res) => {
-        expect(res.body.errors[0].message).toEqual('Supplier not found');
+        expect(res.body.errors[0].message).toEqual('Fornecedor não encontrado');
       });
   });
 });

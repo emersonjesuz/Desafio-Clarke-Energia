@@ -12,7 +12,7 @@ export class EvaluationSupplierResolver {
   @Query(() => Number)
   async calculateAverage(@Args('supplierId') supplierId: string) {
     if (!supplierId) {
-      throw new BadRequestException('Supplier ID is required');
+      throw new BadRequestException('ID do fornecedor é obrigatório');
     }
     return this.EvaluationSupplierService.calculateAverage(supplierId);
   }

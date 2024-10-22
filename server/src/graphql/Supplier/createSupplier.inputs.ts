@@ -4,25 +4,25 @@ import { IsNotEmpty, Length, Min } from 'class-validator';
 @InputType()
 export class CreateSupplierInput {
   @Field()
-  @IsNotEmpty({ message: 'Name is required' })
+  @IsNotEmpty({ message: 'Nome é obrigatorio' })
   name: string;
 
   @Field()
   logo: string;
 
   @Field()
-  @Min(1, { message: 'Minimum KWH must be greater than 0' })
+  @Min(1, { message: 'Minimo de kWh deve ser 1' })
   minimumKwh: number;
 
   @Field()
-  @Min(1, { message: 'KWH amount must be greater than 0' })
+  @Min(1, { message: 'Valor de kWh deve ser maior que 0' })
   kwhAmount: number;
 
   @Field()
-  @Length(14, 14, { message: 'CNPJ must be 14 characters long.' })
+  @Length(14, 14, { message: 'CNPJ deve ter 14 caracteres.' })
   cnpj: string;
 
   @Field()
-  @Length(2, 2, { message: 'State must be 2 characters long.' })
+  @Length(2, 2, { message: 'UF deve ter 2 caracteres.' })
   state: string;
 }

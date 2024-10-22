@@ -20,37 +20,41 @@ export class ContractService {
     const supplier = await this.supplierRepository.findById(
       contractInput.supplierId,
     );
-    if (!supplier) {
-      throw new BadRequestException('Supplier not found');
-    }
-
     const company = await this.companyRepository.findById(
       contractInput.companyId,
     );
 
-    if (!company) {
-      throw new BadRequestException('Company not found');
+    switch (true) {
+      case !supplier:
+        throw new BadRequestException('Fornecedor não encontrado');
+      case !company:
+        throw new BadRequestException('Empresa não encontrada');
+
+      default:
+        break;
     }
 
     const existingContract = await this.repository.findOne(contractInput);
 
     if (existingContract) {
-      throw new BadRequestException('Contract already exists');
+      throw new BadRequestException('Contrato ja existe');
     }
 
     const newContract = await this.repository.create(contractInput);
 
     if (!newContract) {
-      throw new InternalServerErrorException("Couldn't create contract");
+      throw new InternalServerErrorException(
+        'Não foi possivel criar o contrato',
+      );
     }
 
-    return 'Contract created successfully';
+    return 'Contrato criado com sucesso';
   }
 
   async countContractsBySupplier(supplierId: string) {
     const supplier = await this.supplierRepository.findById(supplierId);
     if (!supplier) {
-      throw new BadRequestException('Supplier not found');
+      throw new BadRequestException('Fornecedor não encontrado');
     }
     return this.repository.countBySupplier(supplierId);
   }
