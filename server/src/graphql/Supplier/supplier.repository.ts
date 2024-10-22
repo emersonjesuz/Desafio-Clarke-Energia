@@ -24,6 +24,10 @@ export class SupplierRepository {
           },
         ],
       },
+      include: {
+        Contracts: true,
+        Evaluations: true,
+      },
     });
   }
 
@@ -33,12 +37,18 @@ export class SupplierRepository {
         id,
       },
       include: {
-        Evaluation: true,
+        Contracts: true,
+        Evaluations: true,
       },
     });
   }
 
   async findMany() {
-    return await this.prisma.suppliers.findMany();
+    return await this.prisma.suppliers.findMany({
+      include: {
+        Evaluations: true,
+        Contracts: true,
+      },
+    });
   }
 }
