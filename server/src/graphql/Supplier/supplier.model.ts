@@ -1,4 +1,6 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Float, ObjectType } from '@nestjs/graphql';
+import { Contract } from '../Contract/contract.model';
+import { EvaluationSupplier } from '../EvaluationSupplier/evaluantionSupplier.model';
 
 @ObjectType()
 export class Supplier {
@@ -22,4 +24,12 @@ export class Supplier {
 
   @Field()
   state: string;
+
+  @Field(() => Float)
+  avarage: number;
+
+  @Field(() => [Contract])
+  Contracts: Contract[];
+
+  Evaluations: EvaluationSupplier[];
 }

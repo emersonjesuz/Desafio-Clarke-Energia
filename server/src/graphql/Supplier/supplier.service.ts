@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreateSupplierInput } from './createSupplier.inputs';
 import { SupplierRepository } from './supplier.repository';
+import handleAvarage from '../../helpers/avarage.helper';
 
 @Injectable()
 export class SupplierService {
@@ -30,8 +31,15 @@ export class SupplierService {
 
   async list(valueKwh: number) {
     const suppliers = await this.repository.findMany();
-    const filteredSuppliersByKwh = suppliers.filter((supplier) => {
-      return +supplier.minimumKwh < valueKwh;
+    const filteredSuppliersByKwh = [];
+    suppliers.forEach((supplier) => {
+      if (+supplier.minimumKwh < valueKwh) {
+        let avarage = 0;
+        if (supplier.Evaluations.length) {
+          avarage = handleAvarage(supplier.Evaluations);
+        }
+        filteredSuppliersByKwh.push({ ...supplier, avarage });
+      }
     });
 
     return filteredSuppliersByKwh;
