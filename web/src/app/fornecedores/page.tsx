@@ -1,8 +1,3 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import imageReserve from "@/assets/image-reserva.jpg";
-import Image from "next/image";
-import { FaBolt } from "react-icons/fa6";
 import ListSupplier from "@/components/listSupplier";
 
 export default function Fornecedores() {

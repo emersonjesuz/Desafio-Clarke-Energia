@@ -1,7 +1,8 @@
 "use client";
+import Loading from "@/app/loading";
 import { gql, useQuery } from "@apollo/client";
 import Image from "next/image";
-import { useEffect } from "react";
+import imageReserve from "../../assets/image-reserva.jpg";
 import { FaBolt } from "react-icons/fa6";
 
 interface Supplier {
@@ -11,6 +12,10 @@ interface Supplier {
   kwhAmount: number;
   logo: string;
   state: string;
+  avarage: number;
+  Contracts: {
+    id: string;
+  }[];
 }
 
 const GET_SUPPLIERS = gql`
@@ -22,8 +27,11 @@ const GET_SUPPLIERS = gql`
       kwhAmount
       logo
       state
+      avarage
+      Contracts {
+        id
+      }
     }
-    calculateAverage(supplierId: "3265a406-e1d5-4e1c-9908-c0e8c45ec4e2")
   }
 `;
 
@@ -35,21 +43,22 @@ export default function ListSupplier() {
   });
 
   console.log(data);
+  console.log(error?.message);
 
   return (
     <div className="flex w-full flex-wrap items-center justify-center gap-2 rounded-lg bg-white lg:p-8">
+      {loading && <Loading />}
+
       {data?.listSuppliers.map((supplier: Supplier) => (
         <div className="relative flex h-[500px] w-[340px] flex-col items-center justify-between gap-2 rounded-lg border-2 border-zinc-200 pb-5 shadow-md lg:min-w-[300px] lg:shadow-black/20">
           <div className="absolute right-4 top-4 flex h-10 w-16 items-center justify-center rounded-full border-2 border-greenClarke/50 bg-white shadow-md shadow-black/10">
             <FaBolt className="h-5 w-5 fill-greenClarke" />
-            <span className="font-poppins text-greenClarke"></span>
+            <span className="font-poppins text-greenClarke">
+              {supplier.avarage}
+            </span>
           </div>
           <Image
-            src={
-              supplier.logo
-                ? supplier.logo
-                : "https://i.pinimg.com/564x/d6/41/ea/d641ea7b25fadff97eb3fcdc25530a87.jpg"
-            }
+            src={supplier.logo ? supplier.logo : imageReserve}
             width={10000}
             height={10000}
             alt="fornecedores"
