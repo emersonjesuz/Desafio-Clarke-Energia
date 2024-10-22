@@ -20,27 +20,36 @@ export class CompanyService {
     if (existingcompany) {
       switch (true) {
         case existingcompany.name === company.name:
-          throw new BadRequestException('the company name is already in use');
+          throw new BadRequestException('Nome do cliente já esta em uso');
 
         case existingcompany.email === company.email:
-          throw new BadRequestException('the company email is already in use');
+          throw new BadRequestException('Email do cliente está em uso');
 
         case existingcompany.phone === company.phone:
-          throw new BadRequestException('the company phone is already in use');
+          throw new BadRequestException('Telefone do cliente está em uso');
         case existingcompany.cnpj === company.cnpj:
-          throw new BadRequestException('company cnpj is already in use');
+          throw new BadRequestException('CNPJ do cliente está em uso');
       }
     }
 
     const newCompany = await this.Respository.create(company);
 
     if (!newCompany)
-      throw new InternalServerErrorException("Couldn't create company");
+      throw new InternalServerErrorException(
+        'Não foi possivel criar o cliente',
+      );
 
     return newCompany;
   }
 
-  async findOne(email: string) {
-    return await this.Respository.findOne({ email: email });
+  async findOne({ email, id }: { email?: string; id?: string }) {
+    const existingcompany = email
+      ? await this.Respository.findOne({ email })
+      : await this.Respository.findById(id);
+
+    if (!existingcompany)
+      throw new BadRequestException('Cliente não encontrado');
+
+    return existingcompany;
   }
 }

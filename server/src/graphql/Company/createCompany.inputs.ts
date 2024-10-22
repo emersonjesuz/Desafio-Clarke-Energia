@@ -13,25 +13,31 @@ import {
 @InputType()
 export class CreateCompanyInput {
   @Field()
-  @IsNotEmpty({ message: 'Name is required' })
+  @IsNotEmpty({ message: 'Nome é obrigatorio' })
   name: string;
 
   @Field()
-  @IsEmail({}, { message: 'Invalid email address' })
+  @IsEmail({}, { message: 'Email precisa ser valido' })
   email: string;
 
   @Field()
   @IsString()
-  @Matches(/^\d+$/, { message: 'The phone number must contain numbers only.' })
-  @MinLength(10, { message: 'Phone number must be at least 10 digits long.' })
-  @MaxLength(11, { message: 'Phone number must be no longer than 11 digits.' })
+  @Matches(/^\d+$/, {
+    message: 'Telefone deve conter apenas números.',
+  })
+  @MinLength(10, {
+    message: 'Telefone deve ter no mínimo 10 dígitos.',
+  })
+  @MaxLength(11, {
+    message: 'Telefone deve ter no máximo 11 dígitos.',
+  })
   phone: string;
 
   @Field()
-  @Length(14, 14, { message: 'CNPJ must be 14 characters long.' })
+  @Length(14, 14, { message: 'CNPJ deve ter 14 caracteres.' })
   cnpj: string;
 
   @Field()
-  @Min(1, { message: 'Minimum KWH must be greater than 0' })
+  @Min(1, { message: 'KWH deve ser maior que 0.' })
   kwh: number;
 }

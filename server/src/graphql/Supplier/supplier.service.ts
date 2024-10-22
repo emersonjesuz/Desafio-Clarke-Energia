@@ -35,6 +35,7 @@ export class SupplierService {
     suppliers.forEach((supplier) => {
       if (+supplier.minimumKwh < valueKwh) {
         let avarage = 0;
+
         if (supplier.Evaluations.length) {
           avarage = handleAvarage(supplier.Evaluations);
         }
