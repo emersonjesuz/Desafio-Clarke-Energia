@@ -16,7 +16,6 @@ export class CompanyService {
       email: company.email,
       phone: company.phone,
       cnpj: company.cnpj,
-      kwh: company.kwh,
     });
     if (existingcompany) {
       switch (true) {
@@ -39,5 +38,9 @@ export class CompanyService {
       throw new InternalServerErrorException("Couldn't create company");
 
     return newCompany;
+  }
+
+  async findOne(email: string) {
+    return await this.Respository.findOne({ email: email });
   }
 }

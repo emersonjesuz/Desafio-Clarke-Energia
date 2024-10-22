@@ -21,7 +21,7 @@ interface SupplierMock {
   minimumKwh: number;
   kwhAmount: number;
   cnpj: string;
-  Evaluation: EvaluationSupplier[];
+  Evaluations: EvaluationSupplier[];
 }
 
 describe('Add evaluate E2E', () => {
@@ -53,7 +53,7 @@ describe('Add evaluate E2E', () => {
     kwhAmount: 1,
     minimumKwh: 1000,
     cnpj: '10000500201000',
-    Evaluation: [mockEvaluationSupplier],
+    Evaluations: [mockEvaluationSupplier],
   };
   let companies: Company[] = [mockCompany('123'), mockCompany('456')];
   let suppliers: SupplierMock[] = [mockSupplier];
@@ -318,7 +318,7 @@ describe('Media evaluation E2E', () => {
     kwhAmount: 1,
     minimumKwh: 1000,
     cnpj: '10000500201000',
-    Evaluation: [...evaluations],
+    Evaluations: [...evaluations],
   };
 
   let suppliers: SupplierMock[] = [mockSupplier];
