@@ -10,7 +10,7 @@ export class ContractResolver {
   @Query(() => Number)
   async countContracts(@Args('supplierId') supplierId: string) {
     if (!supplierId) {
-      throw new BadRequestException('Supplier ID is required');
+      throw new BadRequestException('ID do fornecedor é obrigatório');
     }
     return await this.ContractService.countContractsBySupplier(supplierId);
   }

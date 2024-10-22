@@ -23,16 +23,18 @@ export class EvaluationSupplierService {
       evaluationInput.supplierId,
     );
 
-    if (!supplier) {
-      throw new NotFoundException('Supplier not found');
-    }
-
     const company = await this.companyRepository.findById(
       evaluationInput.companyId,
     );
 
-    if (!company) {
-      throw new NotFoundException('Company not found');
+    switch (true) {
+      case !supplier:
+        throw new NotFoundException('Fornecedor não encontrado');
+
+      case !company:
+        throw new NotFoundException('Empresa não encontrada');
+      default:
+        break;
     }
 
     const existeEvaluation = supplier.Evaluations.findIndex((evaluation) => {
@@ -40,22 +42,22 @@ export class EvaluationSupplierService {
     });
 
     if (existeEvaluation !== -1) {
-      throw new BadRequestException('Evaluation already exists');
+      throw new BadRequestException('Avaliação ja existe');
     }
 
     const newEvaluation = await this.repository.create(evaluationInput);
 
     if (!newEvaluation)
-      throw new InternalServerErrorException('Evaluation not created');
+      throw new InternalServerErrorException('Não foi possivel avaliar');
 
-    return 'Evaluation created successfully';
+    return 'Avaliação criada com sucesso';
   }
 
   async calculateAverage(supplierId: string): Promise<number> {
     const supplier = await this.supplierRepository.findById(supplierId);
 
     if (!supplier) {
-      throw new NotFoundException('Supplier not found');
+      throw new NotFoundException('Fornecedor não encontrado');
     }
 
     const evaluations = supplier.Evaluations;

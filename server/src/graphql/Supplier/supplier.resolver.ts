@@ -10,7 +10,7 @@ export class SupplierResolver {
   @Query(() => [Supplier])
   async listSuppliers(@Args('valueKwh') valueKwh: number) {
     if (valueKwh <= 0) {
-      throw new BadRequestException('Value KWH must be greater than 0');
+      throw new BadRequestException('Valor Kwh deve ser maior que zero');
     }
     return await this.SupplierService.list(valueKwh);
   }

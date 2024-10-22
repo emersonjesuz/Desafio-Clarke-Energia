@@ -121,7 +121,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Name is required');
+        expect(message).toEqual('Nome é obrigatorio');
       });
   });
 
@@ -149,7 +149,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Invalid email address');
+        expect(message).toEqual('Email precisa ser valido');
       });
   });
 
@@ -177,9 +177,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual(
-          'Phone number must be no longer than 11 digits.',
-        );
+        expect(message).toEqual('Telefone deve ter no máximo 11 dígitos.');
       });
   });
 
@@ -207,7 +205,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('The phone number must contain numbers only.');
+        expect(message).toEqual('Telefone deve conter apenas números.');
       });
   });
 
@@ -235,9 +233,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual(
-          'Phone number must be at least 10 digits long.',
-        );
+        expect(message).toEqual('Telefone deve ter no mínimo 10 dígitos.');
       });
   });
 
@@ -265,7 +261,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('CNPJ must be 14 characters long.');
+        expect(message).toEqual('CNPJ deve ter 14 caracteres.');
       });
   });
   // não deve criar se o kwr for menor 1
@@ -294,7 +290,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         const message = res.body.errors[0].extensions.originalError.message[0];
-        expect(message).toEqual('Minimum KWH must be greater than 0');
+        expect(message).toEqual('KWH deve ser maior que 0.');
       });
   });
 
@@ -322,7 +318,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         expect(res.body.errors[0].message).toEqual(
-          'the company name is already in use',
+          'Nome do cliente já esta em uso',
         );
       });
   });
@@ -351,7 +347,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         expect(res.body.errors[0].message).toEqual(
-          'the company email is already in use',
+          'Email do cliente está em uso',
         );
       });
   });
@@ -381,7 +377,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         expect(res.body.errors[0].message).toEqual(
-          'the company phone is already in use',
+          'Telefone do cliente está em uso',
         );
       });
   });
@@ -410,7 +406,7 @@ describe('Create Company E2E', () => {
       })
       .expect((res) => {
         expect(res.body.errors[0].message).toEqual(
-          'company cnpj is already in use',
+          'CNPJ do cliente está em uso',
         );
       });
   });
