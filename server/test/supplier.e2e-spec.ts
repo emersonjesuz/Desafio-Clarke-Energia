@@ -20,6 +20,9 @@ describe('Create Supplier E2E', () => {
     minimumKwh: 1000,
     cnpj: '10000500201000',
     state: 'SP',
+    Contracts: [],
+    avarage: 0,
+    Evaluations: [],
   };
   let suppliers: Supplier[] = [mockSupplier];
 
@@ -348,6 +351,9 @@ describe('List suppliers E2E', () => {
     minimumKwh: 1000,
     cnpj: '10000500201000',
     state: 'SP',
+    Contracts: [],
+    avarage: 0,
+    Evaluations: [],
   };
   let suppliers: Supplier[] = [mockSupplier];
 
