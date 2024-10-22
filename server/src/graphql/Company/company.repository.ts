@@ -2,6 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCompanyInput } from './createCompany.inputs';
 
+interface ICompany {
+  name?: string;
+  email?: string;
+  phone?: string;
+  cnpj?: string;
+}
+
 @Injectable()
 export class CompanyRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -12,7 +19,7 @@ export class CompanyRepository {
     });
   }
 
-  async findOne(company: CreateCompanyInput) {
+  async findOne(company: ICompany) {
     return await this.prisma.companies.findFirst({
       where: {
         OR: [
@@ -39,7 +46,7 @@ export class CompanyRepository {
         id,
       },
       include: {
-        Evaluation: true,
+        Evaluations: true,
       },
     });
   }
