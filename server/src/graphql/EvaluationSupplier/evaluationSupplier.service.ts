@@ -8,6 +8,7 @@ import { CompanyRepository } from '../Company/company.repository';
 import { SupplierRepository } from '../Supplier/supplier.repository';
 import { EvaluationSupplierInput } from './evaluationSupplier.inputs';
 import { EvaluationSupplierRepository } from './evaluationSupplier.repository';
+import handleAvarage from '../../helpers/avarage.helper';
 
 @Injectable()
 export class EvaluationSupplierService {
@@ -34,7 +35,7 @@ export class EvaluationSupplierService {
       throw new NotFoundException('Company not found');
     }
 
-    const existeEvaluation = supplier.Evaluation.findIndex((evaluation) => {
+    const existeEvaluation = supplier.Evaluations.findIndex((evaluation) => {
       return evaluation.companyId === evaluationInput.companyId;
     });
 
@@ -57,18 +58,14 @@ export class EvaluationSupplierService {
       throw new NotFoundException('Supplier not found');
     }
 
-    const evaluations = supplier.Evaluation;
+    const evaluations = supplier.Evaluations;
 
     if (evaluations.length === 0) {
       return 0;
     }
 
-    const sum = evaluations.reduce(
-      (acc, evaluation) => acc + evaluation.note,
-      0,
-    );
-    const average = sum / evaluations.length;
-    // quero que ele traga numero tipo um decimo como 2.6
+    const average = handleAvarage(evaluations);
+
     return Number(average.toFixed(1));
   }
 }

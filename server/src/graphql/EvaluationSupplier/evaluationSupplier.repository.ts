@@ -7,7 +7,7 @@ export class EvaluationSupplierRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(evaluationInput: EvaluationSupplierInput) {
-    return await this.prisma.evaluation.create({
+    return await this.prisma.evaluations.create({
       data: {
         note: evaluationInput.note,
         supplierId: evaluationInput.supplierId,
@@ -17,7 +17,7 @@ export class EvaluationSupplierRepository {
   }
 
   async findBySupplier(supplierId: string) {
-    return await this.prisma.evaluation.findMany({
+    return await this.prisma.evaluations.findMany({
       where: {
         supplierId,
       },
