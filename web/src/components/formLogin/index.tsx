@@ -9,29 +9,51 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { gql, useLazyQuery } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import Link from "next/link";
+
+const GET_COMPANIES = gql`
+  query GetCompanies($email: String!) {
+    findCompany(email: $email) {
+      id
+    }
+  }
+`;
 
 const formSchema = z.object({
   email: z.string().email({ message: "Email preciso ser válido" }),
-  password: z.string(),
+  password: z.string().optional(),
 });
 export default function FormLogin() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
+  const [findCompany, { error, data }] = useLazyQuery(GET_COMPANIES);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    findCompany({ variables: { email: values.email } });
   }
+
+  useEffect(() => {
+    if (data?.findCompany) {
+      router.push(`/fornecedores/${data.findCompany.id}`);
+    }
+
+    if (error?.message) {
+      form.setError("email", { message: error.message });
+    }
+  }, [data, error]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
@@ -63,7 +85,6 @@ export default function FormLogin() {
               <FormControl>
                 <Input
                   type="password"
-                  required
                   className="h-12 w-full"
                   placeholder="Senha opcional"
                   {...field}
