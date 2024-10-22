@@ -8,29 +8,29 @@ datasource db {
 }
 
 model Companies {
-  id         String       @id @default(uuid())
-  name       String       @unique
-  email      String       @unique
-  phone      String       @unique
-  cnpj       String       @unique
-  kwh        Decimal
-  Evaluation Evaluation[]
-  Contracts  Contracts[]
+  id          String        @id @default(uuid())
+  name        String        @unique
+  email       String        @unique
+  phone       String        @unique
+  cnpj        String        @unique
+  kwh         Decimal
+  Evaluations Evaluations[]
+  Contracts   Contracts[]
 }
 
 model Suppliers {
-  id         String       @id @default(uuid())
-  name       String       @unique
-  logo       String
-  minimumKwh Decimal
-  kwhAmount  Decimal
-  cnpj       String       @unique
-  state      String
-  Evaluation Evaluation[]
-  Contracts  Contracts[]
+  id          String        @id @default(uuid())
+  name        String        @unique
+  logo        String
+  minimumKwh  Decimal
+  kwhAmount   Decimal
+  cnpj        String        @unique
+  state       String
+  Evaluations Evaluations[]
+  Contracts   Contracts[]
 }
 
-model Evaluation {
+model Evaluations {
   id         Int       @id @default(autoincrement())
   note       Int
   supplierId String
