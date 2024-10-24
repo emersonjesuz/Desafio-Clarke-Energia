@@ -14,7 +14,7 @@ import { gql, useLazyQuery } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -40,22 +40,28 @@ export default function FormLogin() {
     },
   });
 
-  const [findCompany] = useLazyQuery(GET_COMPANIES);
+  const [findCompany, { error, data }] = useLazyQuery(GET_COMPANIES);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setShowLoading(true);
     findCompany({
       variables: { email: values.email },
-    })
-      .then(({ data }) => {
-        setShowLoading(false);
-        router.push(`/fornecedores/${data.findCompany.id}`);
-      })
-      .catch((error) => {
-        form.setError("email", { message: error.message });
-      });
+    }).catch(() => {
+      // Error não vai ser exibido na tela
+    });
   }
 
+  useEffect(() => {
+    if (data?.findCompany) {
+      setShowLoading(false);
+      router.push(`/fornecedores/${data?.findCompany.id}`);
+    }
+
+    if (error?.message) {
+      setShowLoading(false);
+      form.setError("email", { message: error?.message });
+    }
+  }, [error, data]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
@@ -69,6 +75,7 @@ export default function FormLogin() {
                 <Input
                   type="email"
                   required
+                  id="emailLogin"
                   className="h-12 w-full"
                   placeholder="Endereço de e-mail*"
                   {...field}
@@ -87,6 +94,7 @@ export default function FormLogin() {
               <FormControl>
                 <Input
                   type="password"
+                  id="passwordLogin"
                   className="h-12 w-full"
                   placeholder="Senha opcional"
                   {...field}
