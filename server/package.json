@@ -12,12 +12,12 @@
     "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "migrate": "prisma migrate dev --name init",
-    "docker:up": "docker-compose up -d",
+    "migrate:init": "prisma migrate dev --name init",
+    "migrate:deploy": "prisma migrate deploy",
+    "docker:up": "docker-compose up",
     "docker:down": "docker-compose down",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --config ./test/jest-e2e.json",
-    "test:e": "cross-env NODE_ENV=test DATABASE_URL=postgresql://admin:admin123@localhost:5434/test?schema=public jest --config ./test/jest-e2e.json "
+    "test": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@apollo/server": "^4.11.0",
