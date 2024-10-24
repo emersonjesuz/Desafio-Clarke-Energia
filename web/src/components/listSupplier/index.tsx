@@ -3,7 +3,7 @@ import { GlobalContext } from "@/context/globalContext";
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useContext, useEffect, useLayoutEffect } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import CardSupplier from "../cardSupplier";
 
 interface Supplier {
@@ -52,13 +52,14 @@ export default function ListSupplier() {
   const { id } = useParams();
   const route = useRouter();
   const { setShowLoading } = useContext(GlobalContext);
+  const [findAllSuppliers, setFindAllSuppliers] = useState<Supplier[]>([]);
 
   const { data: dataCompany, error: errorCompany } = useQuery(GET_COMPANIE, {
     variables: {
       id: id,
     },
   });
-  const [listSuppliers, { loading, data }] = useLazyQuery(GET_SUPPLIERS);
+  const [listSuppliers, { loading, data, error }] = useLazyQuery(GET_SUPPLIERS);
 
   useEffect(() => {
     if (dataCompany) {
@@ -75,29 +76,37 @@ export default function ListSupplier() {
     setShowLoading(loading);
   }, [dataCompany, errorCompany]);
 
+  useEffect(() => {
+    if (data?.listSuppliers) {
+      setFindAllSuppliers([...data?.listSuppliers]);
+    }
+  }, [data]);
+
   useLayoutEffect(() => {
     setShowLoading(true);
   }, []);
 
   return (
-    <div className="flex w-full flex-wrap items-center justify-center gap-5 rounded-lg bg-white lg:p-8">
-      {data?.listSuppliers.length ? (
-        data.listSuppliers.map((supplier: Supplier) => (
+    <div className="flex w-full flex-wrap items-center justify-center gap-5 rounded-lg bg-white py-4 lg:p-8">
+      {findAllSuppliers.length ? (
+        findAllSuppliers.map((supplier: Supplier) => (
           <CardSupplier key={supplier.id} supplier={supplier} />
         ))
       ) : (
-        <h1 className="p-1 text-center font-poppins text-xl font-bold text-black lg:p-8 lg:text-3xl">
-          Não foram encontrados soluções que se adequem ao seu negócio!
-          <span className="px-2 text-greenClarke">Mas não desanime,</span>
-          Ainda podemos ajudá-lo
-          <Link
-            href={"https://clarke.com.br/"}
-            target="_blank"
-            className="px-2 text-greenClarke underline hover:text-greenClarke/50"
-          >
-            simule sua economia
-          </Link>
-        </h1>
+        <div className="min-h-[500px] w-full">
+          <h1 className="p-1 text-center font-poppins text-xl font-bold text-black lg:p-8 lg:text-3xl">
+            Não foram encontrados soluções que se adequem ao seu negócio!
+            <span className="px-2 text-greenClarke">Mas não desanime,</span>
+            Ainda podemos ajudá-lo
+            <Link
+              href={"https://clarke.com.br/"}
+              target="_blank"
+              className="px-2 text-greenClarke underline hover:text-greenClarke/50"
+            >
+              simule sua economia
+            </Link>
+          </h1>
+        </div>
       )}
     </div>
   );

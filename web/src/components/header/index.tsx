@@ -46,12 +46,14 @@ export default function Header() {
         <div className="hidden items-center gap-4 lg:flex">
           <Link
             href="/cadastro"
+            id="registerHeader"
             className="rounded-3xl bg-white px-4 py-2 font-poppins text-[12px] text-black transition-colors hover:bg-white/60"
           >
             Ser um cliente
           </Link>
           <Link
             href="/login"
+            id="loginHeader"
             className="rounded-3xl bg-greenClarke px-4 py-2 font-poppins text-[12px] text-black transition-colors hover:bg-greenClarke/60"
           >
             Área do cliente
