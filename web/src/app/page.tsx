@@ -7,7 +7,10 @@ export default function Home() {
         <Dashboard />
       </div>
       <div className="p-5">
-        <p className="text-center font-poppins text-[14px] font-bold text-black lg:text-[24px]">
+        <p
+          id="sobre"
+          className="text-center font-poppins text-[14px] font-bold text-black lg:text-[24px]"
+        >
           Somos uma gestora de energia aprovada por{" "}
           <span className="text-greenClarke">líderes</span> do mercado
         </p>

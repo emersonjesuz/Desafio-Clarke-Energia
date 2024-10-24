@@ -18,6 +18,7 @@ export default function Dashboard() {
         </p>
         <Link
           href="/cadastro"
+          id="registerDesktop"
           className="z-30 mx-auto mt-5 hidden w-[90%] items-center justify-between gap-5 rounded-3xl bg-greenClarke/80 p-2 transition-colors hover:bg-greenClarke/40 lg:mx-0 lg:flex lg:w-[300px]"
         >
           <span className="pl-4 font-poppins text-white">
@@ -42,6 +43,7 @@ export default function Dashboard() {
           </Suspense>
           <Link
             href="/cadastro"
+            id="registerMobile"
             className="absolute -bottom-10 z-30 mx-auto flex w-[90%] items-center justify-between gap-5 rounded-3xl bg-greenClarke/80 p-2 lg:hidden lg:w-[300px]"
           >
             <span className="pl-4 font-poppins text-white">
