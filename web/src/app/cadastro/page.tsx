@@ -1,4 +1,4 @@
-import FormCadastro from "@/components/formCadastro";
+import FormRegister from "@/components/formRegister";
 import LogoClarkeGreen from "@/components/icons/logoClarkeGreen";
 
 export default function Cadastro() {
@@ -18,7 +18,7 @@ export default function Cadastro() {
           </span>
           para o seu negócio!
         </p>
-        <FormCadastro />
+        <FormRegister />
       </div>
     </div>
   );

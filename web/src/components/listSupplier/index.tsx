@@ -1,9 +1,9 @@
 "use client";
-import Loading from "@/app/loading";
+import { GlobalContext } from "@/context/globalContext";
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useContext, useEffect, useLayoutEffect } from "react";
 import CardSupplier from "../cardSupplier";
 
 interface Supplier {
@@ -51,6 +51,7 @@ const GET_COMPANIE = gql`
 export default function ListSupplier() {
   const { id } = useParams();
   const route = useRouter();
+  const { setShowLoading } = useContext(GlobalContext);
 
   const { data: dataCompany, error: errorCompany } = useQuery(GET_COMPANIE, {
     variables: {
@@ -70,11 +71,16 @@ export default function ListSupplier() {
     if (errorCompany) {
       route.push("/login");
     }
+
+    setShowLoading(loading);
   }, [dataCompany, errorCompany]);
+
+  useLayoutEffect(() => {
+    setShowLoading(true);
+  }, []);
 
   return (
     <div className="flex w-full flex-wrap items-center justify-center gap-5 rounded-lg bg-white lg:p-8">
-      {loading && <Loading />}
       {data?.listSuppliers.length ? (
         data.listSuppliers.map((supplier: Supplier) => (
           <CardSupplier key={supplier.id} supplier={supplier} />

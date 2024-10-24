@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { gql, useMutation } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -47,7 +46,7 @@ const formSchema = z.object({
     .string()
     .length(11, { message: "Telefone preciso ter 11 caracteres" }),
 });
-export default function FormCadastro() {
+export default function FormRegister() {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,7 +59,7 @@ export default function FormCadastro() {
     },
   });
 
-  const [createCompany, { error, data }] = useMutation(CREATE_COMPANY);
+  const [createCompany] = useMutation(CREATE_COMPANY);
 
   function extractDigits(input: string): string {
     return input.replace(/\D/g, "");
@@ -75,12 +74,14 @@ export default function FormCadastro() {
         name: values.name,
         phone: values.phone,
       },
-    }).catch(() => {
-      // O foi tratado na função handlerMessageError
-    });
+    })
+      .then(() => router.push("/fornecedores"))
+      .catch((error) => {
+        handlerMessageError(error);
+      });
   }
 
-  function handlerMessageError() {
+  function handlerMessageError(error: { message: string }) {
     switch (error?.message.split(" ")[0]) {
       case "Nome":
         form.setError("name", { message: error.message });
@@ -104,20 +105,10 @@ export default function FormCadastro() {
     }
   }
 
-  useEffect(() => {
-    if (data?.createCompany) {
-      router.push(`/fornecedores/${data.createCompany.id}`);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (error?.message) {
-      handlerMessageError();
-    }
-  }, [error]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
+        {/* Name */}
         <FormField
           control={form.control}
           name="name"
@@ -139,6 +130,8 @@ export default function FormCadastro() {
             </FormItem>
           )}
         />
+
+        {/* Email */}
         <FormField
           control={form.control}
           name="email"
@@ -160,6 +153,7 @@ export default function FormCadastro() {
             </FormItem>
           )}
         />
+        {/* CNPJ */}
         <FormField
           control={form.control}
           name="cnpj"
@@ -184,6 +178,8 @@ export default function FormCadastro() {
             </FormItem>
           )}
         />
+
+        {/* Phone */}
         <FormField
           control={form.control}
           name="phone"
@@ -209,6 +205,7 @@ export default function FormCadastro() {
             </FormItem>
           )}
         />
+        {/* Kwh */}
         <FormField
           control={form.control}
           name="kwh"

@@ -1,11 +1,10 @@
-import Header from "@/components/header";
-import client from "@/lib/apollo-client";
-import { ApolloProvider } from "@apollo/client";
+import GlobalLayout from "@/components/globalLayout.tsx";
+import { GlobalContextProvider } from "@/context/globalContext";
+import { ApolloClientProvider } from "@/lib/apollo-provider";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ApolloClientProvider } from "@/lib/apollo-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,8 +39,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} antialiased`}
       >
         <ApolloClientProvider>
-          <Header />
-          {children}
+          <GlobalContextProvider>
+            <GlobalLayout>{children}</GlobalLayout>
+          </GlobalContextProvider>
         </ApolloClientProvider>
       </body>
     </html>

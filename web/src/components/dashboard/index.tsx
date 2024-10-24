@@ -1,5 +1,7 @@
 import backgroundAndPhoneImage from "@/assets/hero-section.png";
 import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 
 export default function Dashboard() {
@@ -14,30 +16,41 @@ export default function Dashboard() {
         <p className="px-4 text-center font-poppins text-[14px] text-white lg:text-[16px]">
           Sem investimentos e sem dor de cabeça!
         </p>
-        <button className="z-30 mx-auto mt-5 hidden w-[90%] items-center justify-between gap-5 rounded-3xl bg-greenClarke/80 p-2 transition-colors hover:bg-greenClarke/40 lg:mx-0 lg:flex lg:w-[300px]">
+        <Link
+          href="/cadastro"
+          className="z-30 mx-auto mt-5 hidden w-[90%] items-center justify-between gap-5 rounded-3xl bg-greenClarke/80 p-2 transition-colors hover:bg-greenClarke/40 lg:mx-0 lg:flex lg:w-[300px]"
+        >
           <span className="pl-4 font-poppins text-white">
             Quero ser um cliente{" "}
           </span>
           <div className="rounded-full bg-white p-3">
             <FaArrowRightLong className="fill-greenClarke" />
           </div>
-        </button>
+        </Link>
       </div>
       <div className="relative flex w-full items-center justify-center">
         <div className="relative flex w-full items-center justify-center">
-          <Image
-            src={backgroundAndPhoneImage}
-            alt="background and phone image"
-            className="z-0 h-full min-h-[70vh] w-full lg:pt-10"
-          />
-          <button className="absolute -bottom-10 z-30 mx-auto flex w-[90%] items-center justify-between gap-5 rounded-3xl bg-greenClarke/80 p-2 lg:hidden lg:w-[300px]">
+          <Suspense fallback={<div>Loading...</div>}>
+            <Image
+              src={backgroundAndPhoneImage}
+              priority
+              width={1000}
+              height={1000}
+              alt="background and phone image"
+              className="z-0 h-full w-full lg:min-h-[70vh] lg:min-w-[500px] lg:pt-10"
+            />
+          </Suspense>
+          <Link
+            href="/cadastro"
+            className="absolute -bottom-10 z-30 mx-auto flex w-[90%] items-center justify-between gap-5 rounded-3xl bg-greenClarke/80 p-2 lg:hidden lg:w-[300px]"
+          >
             <span className="pl-4 font-poppins text-white">
               Quero ser um cliente{" "}
             </span>
             <div className="rounded-full bg-white p-3">
               <FaArrowRightLong className="fill-greenClarke" />
             </div>
-          </button>
+          </Link>
         </div>
       </div>
     </section>

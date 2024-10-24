@@ -82,7 +82,7 @@ export default function CardSupplier({ supplier }: Props) {
             width={10000}
             height={10000}
             alt="fornecedores"
-            className="h-[250px] w-full rounded-t object-cover shadow"
+            className="h-[250px] min-h-[250px] w-full rounded-t object-cover shadow"
           />
         </Suspense>
         <div className="flex h-full w-full flex-col items-center justify-between p-4">

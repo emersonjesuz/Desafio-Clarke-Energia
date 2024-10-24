@@ -9,11 +9,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { GlobalContext } from "@/context/globalContext";
 import { gql, useLazyQuery } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -31,6 +32,7 @@ const formSchema = z.object({
 });
 export default function FormLogin() {
   const router = useRouter();
+  const { setShowLoading } = useContext(GlobalContext);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,21 +40,21 @@ export default function FormLogin() {
     },
   });
 
-  const [findCompany, { error, data }] = useLazyQuery(GET_COMPANIES);
+  const [findCompany] = useLazyQuery(GET_COMPANIES);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    findCompany({ variables: { email: values.email } });
+    setShowLoading(true);
+    findCompany({
+      variables: { email: values.email },
+    })
+      .then(({ data }) => {
+        setShowLoading(false);
+        router.push(`/fornecedores/${data.findCompany.id}`);
+      })
+      .catch((error) => {
+        form.setError("email", { message: error.message });
+      });
   }
-
-  useEffect(() => {
-    if (data?.findCompany) {
-      router.push(`/fornecedores/${data.findCompany.id}`);
-    }
-
-    if (error?.message) {
-      form.setError("email", { message: error.message });
-    }
-  }, [data, error]);
 
   return (
     <Form {...form}>
