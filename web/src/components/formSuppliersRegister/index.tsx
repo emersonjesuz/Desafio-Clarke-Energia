@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { GlobalContext } from "@/context/globalContext";
-import { gql, useMutation } from "@apollo/client";
+import { ApolloError, gql, useMutation } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
 
 const CREATE_SUPPLIER = gql`
   mutation PostCreateSupplier(
@@ -52,6 +53,7 @@ const formSchema = z.object({
 });
 export default function FormSuppliersRegister() {
   const { setShowLoading } = useContext(GlobalContext);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,7 +67,7 @@ export default function FormSuppliersRegister() {
     },
   });
 
-  const [createSupplier] = useMutation(CREATE_SUPPLIER);
+  const [createSupplier, { data, error }] = useMutation(CREATE_SUPPLIER);
 
   function extractDigits(input: string): string {
     return input.replace(/\D/g, "");
@@ -82,19 +84,12 @@ export default function FormSuppliersRegister() {
         logo: values.logo,
         state: values.state,
       },
-    })
-      .then(() => {
-        setShowLoading(false);
-        alert("Cadastrado com sucesso");
-        form.reset();
-      })
-      .catch((error) => {
-        handlerMessageError(error);
-        setShowLoading(false);
-      });
+    }).catch(() => {
+      //  erro já esta sendo tratado no handlerMessageError
+    });
   }
 
-  function handlerMessageError(error: { message: string }) {
+  function handlerMessageError(error: ApolloError) {
     switch (error?.message.split(" ")[0]) {
       case "Nome":
         form.setError("name", { message: error.message });
@@ -112,11 +107,39 @@ export default function FormSuppliersRegister() {
       case "UF":
         form.setError("state", { message: error.message });
         break;
+      case "Bad":
+        const originalError: any =
+          error?.graphQLErrors?.[0].extensions?.originalError;
+        const message: string = originalError!.message
+          ? originalError?.message[0]
+          : "";
+
+        toast({
+          title: "Erro!",
+          description: message!,
+        });
+        break;
 
       default:
         break;
     }
   }
+
+  useEffect(() => {
+    if (data?.createSupplier) {
+      setShowLoading(false);
+      toast({
+        title: "Sucesso!",
+        description: "Fornecedor cadastrado com sucesso",
+      });
+      form.reset();
+    }
+
+    if (error) {
+      setShowLoading(false);
+      handlerMessageError(error!);
+    }
+  }, [error, data]);
 
   return (
     <Form {...form}>
@@ -133,6 +156,7 @@ export default function FormSuppliersRegister() {
               <FormControl>
                 <Input
                   type="text"
+                  id="nameRegisterSupplier"
                   required
                   className="h-12 w-full"
                   placeholder=""
@@ -155,6 +179,7 @@ export default function FormSuppliersRegister() {
               <FormControl>
                 <Input
                   type="string"
+                  id="stateRegisterSupplier"
                   required
                   maxLength={2}
                   className="h-12 w-full"
@@ -181,6 +206,7 @@ export default function FormSuppliersRegister() {
               <FormControl>
                 <Input
                   type="text"
+                  id="cnpjRegisterSupplier"
                   required
                   className="h-12 w-full"
                   placeholder=""
@@ -207,6 +233,7 @@ export default function FormSuppliersRegister() {
               <FormControl>
                 <Input
                   type="string"
+                  id="minimumKwhRegisterSupplier"
                   required
                   className="h-12 w-full"
                   placeholder=""
@@ -233,6 +260,7 @@ export default function FormSuppliersRegister() {
               <FormControl>
                 <Input
                   type="text"
+                  id="kwhAmountRegisterSupplier"
                   required
                   className="h-12 w-full"
                   placeholder=""
@@ -258,6 +286,7 @@ export default function FormSuppliersRegister() {
               <FormControl>
                 <Input
                   type="text"
+                  id="logoRegisterSupplier"
                   className="h-12 w-full"
                   placeholder=""
                   {...field}
