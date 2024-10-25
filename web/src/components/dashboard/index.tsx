@@ -3,11 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
+import ImageHome from "../ImageHome";
 
 export default function Dashboard() {
   return (
     <section className="relative mx-auto flex h-[100%] min-h-[70vh] w-full flex-col lg:w-[65%] lg:flex-row">
-      <div className="flex-col items-center justify-center px-4 pb-4 lg:flex lg:items-start">
+      <div className="relative z-30 flex-col items-center justify-center px-4 pb-4 lg:flex lg:items-start">
         <h1 className="flex-col text-center font-poppins text-4xl font-bold text-white lg:flex lg:min-w-[500px] lg:py-10 lg:text-left lg:text-5xl lg:leading-[60px]">
           Compre energia até
           <span className="px-1 text-greenClarke">40% mais barata</span>
@@ -30,17 +31,17 @@ export default function Dashboard() {
         </Link>
       </div>
       <div className="relative flex w-full items-center justify-center">
-        <div className="relative flex w-full items-center justify-center">
+        <div className="relative flex h-full w-full items-center justify-center">
           <Suspense fallback={<div>Loading...</div>}>
             <Image
               src={backgroundAndPhoneImage}
-              priority
               width={1000}
               height={1000}
               alt="background and phone image"
-              className="z-0 h-full w-full lg:min-h-[70vh] lg:min-w-[500px] lg:pt-10"
+              className="z-0 h-auto w-full lg:hidden"
             />
           </Suspense>
+          <ImageHome />
           <Link
             href="/cadastro"
             id="registerMobile"
