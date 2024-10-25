@@ -9,9 +9,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { gql, useMutation } from "@apollo/client";
+import { useToast } from "@/hooks/use-toast";
+import { ApolloError, gql, useMutation } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -47,6 +49,7 @@ const formSchema = z.object({
     .length(11, { message: "Telefone preciso ter 11 caracteres" }),
 });
 export default function FormRegister() {
+  const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,7 +62,7 @@ export default function FormRegister() {
     },
   });
 
-  const [createCompany] = useMutation(CREATE_COMPANY);
+  const [createCompany, { data, error }] = useMutation(CREATE_COMPANY);
 
   function extractDigits(input: string): string {
     return input.replace(/\D/g, "");
@@ -74,14 +77,12 @@ export default function FormRegister() {
         name: values.name,
         phone: values.phone,
       },
-    })
-      .then(() => router.push("/fornecedores"))
-      .catch((error) => {
-        handlerMessageError(error);
-      });
+    }).catch(() => {
+      // erro já esta sendo tratado no handlerMessageError
+    });
   }
 
-  function handlerMessageError(error: { message: string }) {
+  function handlerMessageError(error: ApolloError) {
     switch (error?.message.split(" ")[0]) {
       case "Nome":
         form.setError("name", { message: error.message });
@@ -99,11 +100,33 @@ export default function FormRegister() {
       case "Telefone":
         form.setError("phone", { message: error.message });
         break;
+      case "Bad":
+        const originalError: any =
+          error?.graphQLErrors?.[0].extensions?.originalError;
+        const message: string = originalError!.message
+          ? originalError?.message[0]
+          : "";
+
+        toast({
+          title: "Erro!",
+          description: message!,
+        });
+        break;
 
       default:
         break;
     }
   }
+
+  useEffect(() => {
+    if (data?.createCompany) {
+      router.push("/fornecedores/" + data?.createCompany?.id);
+    }
+
+    if (error?.message) {
+      handlerMessageError(error);
+    }
+  }, [data, error]);
 
   return (
     <Form {...form}>
@@ -121,6 +144,7 @@ export default function FormRegister() {
                 <Input
                   type="text"
                   required
+                  id="name"
                   className="h-12 w-full"
                   placeholder=""
                   {...field}
@@ -143,6 +167,7 @@ export default function FormRegister() {
               <FormControl>
                 <Input
                   type="email"
+                  id="email"
                   required
                   className="h-12 w-full"
                   placeholder=""
@@ -165,7 +190,9 @@ export default function FormRegister() {
               <FormControl>
                 <Input
                   type="text"
+                  id="cnpj"
                   required
+                  maxLength={14}
                   className="h-12 w-full"
                   placeholder=""
                   onChange={(e) => {
@@ -191,6 +218,7 @@ export default function FormRegister() {
               <FormControl>
                 <Input
                   type="tel"
+                  id="phone"
                   required
                   maxLength={11}
                   className="h-12 w-full"
@@ -217,6 +245,7 @@ export default function FormRegister() {
               <FormControl>
                 <Input
                   type="text"
+                  id="kwh"
                   required
                   className="h-12 w-full"
                   placeholder=""
