@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import CardSupplier from "../cardSupplier";
+import { useToast } from "@/hooks/use-toast";
 
 interface Supplier {
   id: string;
@@ -51,6 +52,7 @@ const GET_COMPANIE = gql`
 export default function ListSupplier() {
   const { id } = useParams();
   const route = useRouter();
+  const { toast } = useToast();
   const { setShowLoading } = useContext(GlobalContext);
   const [findAllSuppliers, setFindAllSuppliers] = useState<Supplier[]>([]);
 
@@ -59,26 +61,30 @@ export default function ListSupplier() {
       id: id,
     },
   });
-  const [listSuppliers, { loading, data, error }] = useLazyQuery(GET_SUPPLIERS);
+  const [listSuppliers, { loading, data }] = useLazyQuery(GET_SUPPLIERS);
 
   useEffect(() => {
     if (dataCompany) {
       listSuppliers({
         variables: { valueKwh: dataCompany?.findCompany.kwh },
       }).catch((err) => {
-        alert(err.message);
+        toast({
+          title: "Erro",
+          description: err.message,
+        });
       });
     }
     if (errorCompany) {
       route.push("/login");
     }
-
-    setShowLoading(loading);
   }, [dataCompany, errorCompany]);
 
   useEffect(() => {
     if (data?.listSuppliers) {
+      console.log(data?.listSuppliers);
+
       setFindAllSuppliers([...data?.listSuppliers]);
+      setShowLoading(false);
     }
   }, [data]);
 

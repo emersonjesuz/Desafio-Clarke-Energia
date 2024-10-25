@@ -54,9 +54,6 @@ export default function CardSupplier({ supplier }: Props) {
   }
 
   function existingContract(): boolean {
-    if (supplier.Contracts.length > 0) {
-      return true;
-    }
     return !!supplier.Contracts.find((contract) => contract.companyId === id);
   }
 
