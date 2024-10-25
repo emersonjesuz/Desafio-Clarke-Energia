@@ -5,9 +5,8 @@ describe("Login E2E", () => {
   });
 
   it("should be possible to login with valid credentials", () => {
-    cy.get("#emailLogin").type("g5jzZ@example.com");
+    cy.get("#emailLogin").type("meContrata@example.com");
     cy.get("#passwordLogin").type("123456");
-    cy.get("button[type=submit]").click();
 
     cy.intercept("POST", "http://localhost:3000/graphql", (req) => {
       req.reply({
@@ -18,6 +17,8 @@ describe("Login E2E", () => {
         },
       });
     }).as("login");
+
+    cy.get("button[type=submit]").click();
 
     cy.wait("@login").then(({ response }) => {
       expect(response!.body.data.findCompany.id).to.equal("123");
@@ -43,7 +44,7 @@ describe("Login E2E", () => {
   });
 
   it("should not be possible to login with invalid credentials", () => {
-    cy.get("#emailLogin").type("g5jzZ@example.com");
+    cy.get("#emailLogin").type("meContrata@example.com");
     cy.get("#passwordLogin").type("123456");
 
     cy.intercept("POST", "http://localhost:3000/graphql", (req) => {

@@ -1,11 +1,12 @@
 "use client";
+import Link from "next/link";
 import { MdMenu } from "react-icons/md";
 import LogoClarkeGreen from "../icons/logoClarkeGreen";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { GlobalContext } from "@/context/globalContext";
 
 export default function Header() {
-  const router = useRouter();
+  const { setOpenMenu } = useContext(GlobalContext);
   return (
     <header className="fixed top-0 z-50 flex h-28 w-screen items-center justify-around border-b border-b-[#e5e7eb] bg-gradient-to-l from-[#2e2e2e] to-[#005931]">
       <nav className="flex w-[90%] max-w-7xl items-center justify-between 2xl:w-[65%]">
@@ -60,7 +61,11 @@ export default function Header() {
           </Link>
         </div>
 
-        <button className="rounded-full bg-[#e6f9dc] p-2 hover:bg-[#e6f9dc]/50 lg:hidden">
+        <button
+          onClick={() => setOpenMenu(true)}
+          id="menuHeader"
+          className="rounded-full bg-[#e6f9dc] p-2 hover:bg-[#e6f9dc]/50 lg:hidden"
+        >
           <MdMenu className="h-[24px] w-[24px]" />
         </button>
       </nav>

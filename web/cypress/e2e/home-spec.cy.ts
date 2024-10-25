@@ -15,6 +15,39 @@ describe("Mobile size home screen", () => {
 
     cy.url().should("eq", "http://localhost:3005/cadastro");
   });
+
+  it("should be possible to open the menu by clicking on the icon", () => {
+    cy.contains("Compre energia até").should("be.visible");
+    cy.get("#menuHeader").should("be.visible");
+    cy.get("#menuHeader").click();
+    cy.contains("Inicio").should("be.visible");
+  });
+
+ 
+  it("should be possible to redirect to the login screen by clicking on the 'Client Area' link on the screen after opening the menu", () => {
+    cy.contains("Compre energia até").should("be.visible");
+    cy.get("#menuHeader").should("be.visible");
+    cy.get("#menuHeader").click();
+    cy.contains("Inicio").should("be.visible");
+
+    cy.get("#loginMenu").should("be.visible");
+    cy.get("#loginMenu").click();
+
+    cy.url().should("eq", "http://localhost:3005/login");
+  });
+
+ 
+  it("should be possible to redirect to the registration screen by clicking on the 'ser um cliente' link on the screen after opening the menu", () => {
+    cy.contains("Compre energia até").should("be.visible");
+    cy.get("#menuHeader").should("be.visible");
+    cy.get("#menuHeader").click();
+    cy.contains("Inicio").should("be.visible");
+
+    cy.get("#registerMenu").should("be.visible");
+    cy.get("#registerMenu").click();
+
+    cy.url().should("eq", "http://localhost:3005/cadastro");
+  });
 });
 
 describe("Desktop size home screen", () => {

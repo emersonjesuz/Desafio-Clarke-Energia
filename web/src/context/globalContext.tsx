@@ -12,6 +12,8 @@ type GlobalContextProps = {
   setShowLoading: React.Dispatch<React.SetStateAction<boolean>>;
   modalAverage: ModalAvarage;
   setModalAverage: React.Dispatch<React.SetStateAction<ModalAvarage>>;
+  openMenu: boolean;
+  setOpenMenu: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type GlobalContextProviderProps = {
@@ -27,6 +29,8 @@ const DEFAULT_VALUE: GlobalContextProps = {
     open: false,
   },
   setModalAverage: () => {},
+  openMenu: false,
+  setOpenMenu: () => {},
 };
 
 export const GlobalContext =
@@ -36,6 +40,7 @@ export function GlobalContextProvider({
   children,
 }: GlobalContextProviderProps) {
   const [showLoading, setShowLoading] = React.useState<boolean>(false);
+  const [openMenu, setOpenMenu] = React.useState<boolean>(false);
   const [modalAverage, setModalAverage] = React.useState<ModalAvarage>({
     companyId: "",
     supplierId: "",
@@ -48,8 +53,10 @@ export function GlobalContextProvider({
       setShowLoading,
       modalAverage,
       setModalAverage,
+      openMenu,
+      setOpenMenu,
     }),
-    [showLoading, modalAverage],
+    [showLoading, modalAverage, openMenu],
   );
 
   return (

@@ -1,4 +1,5 @@
 import { GlobalContext } from "@/context/globalContext";
+import { useToast } from "@/hooks/use-toast";
 import { gql, useMutation } from "@apollo/client";
 import { useContext, useState } from "react";
 import { FaBolt } from "react-icons/fa6";
@@ -23,6 +24,7 @@ export default function ModalConfirmContract() {
   const [avarage, setAvarage] = useState(1);
   const [addEvaluationSupplier] = useMutation(AVUALUATES);
   const { modalAverage, setModalAverage } = useContext(GlobalContext);
+  const { toast } = useToast();
 
   function handleSubmit() {
     addEvaluationSupplier({
@@ -39,7 +41,10 @@ export default function ModalConfirmContract() {
       supplierId: "",
       open: false,
     });
-    alert("Solicitação concluída!");
+    toast({
+      title: "sucesso",
+      description: "Solicitação concluída!",
+    });
     window.location.reload(); // forçar atualização da tela
   }
   return (
