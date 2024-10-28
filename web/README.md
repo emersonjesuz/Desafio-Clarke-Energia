@@ -50,6 +50,13 @@ Isso abrirá a interface do Cypress, onde você pode selecionar e executar os te
 $ npm run cy:run
 ```
 
+### Adicionar um fornecedor
+Para adicionar  um fornecedor  navegue para rota a baixo
+
+```bash
+/fornecedores/cadastro
+```
+
 ### Tecnologias Utilizadas
 
 - Next
